@@ -1,4 +1,4 @@
-import { ServerError } from '../errors/server'
+import { ServerError } from '../errors'
 import { type HttpResponse } from '../protocols/http'
 
 export class HttpHelper {
