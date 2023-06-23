@@ -15,4 +15,11 @@ export class HttpHelper {
       body: new ServerError()
     }
   }
+
+  static ok (data: any): HttpResponse {
+    return {
+      statusCode: 200,
+      body: data
+    }
+  }
 }
