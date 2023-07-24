@@ -11,9 +11,11 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage"
   },
-  "hooks": {
-    "pre-commit": "lint-staged",
-    "pre-push": "npm run test:ci"
+  "husky":{
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:ci"
+    }
   },
   "keywords": [],
   "author": "",
