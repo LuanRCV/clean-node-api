@@ -4,7 +4,10 @@ export class MongoHelper {
   static client: MongoClient
 
   static async connect (uri: string): Promise<void> {
-    this.client = await MongoClient.connect(uri)
+    this.client = await MongoClient.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
   }
 
   static async disconnect (): Promise<void> {
