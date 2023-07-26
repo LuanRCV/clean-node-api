@@ -17,4 +17,10 @@ export class MongoHelper {
   static getCollection (name: string): Collection {
     return this.client.db().collection(name)
   }
+
+  static mapEntity<T> (entity: any): T {
+    const { _id, ...entityWithoutId } = entity
+
+    return Object.assign({}, entityWithoutId, { id: _id })
+  }
 }
