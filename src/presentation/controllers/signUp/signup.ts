@@ -36,7 +36,7 @@ export class SignUpController implements Controller {
       return HttpHelper.ok(account)
     } catch (error) {
       console.error(error)
-      return HttpHelper.serverError()
+      return HttpHelper.serverError(error)
     }
   }
 }
