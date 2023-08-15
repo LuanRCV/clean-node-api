@@ -1,6 +1,6 @@
 import { LoginController } from './login'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { type HttpRequest, type EmailValidator, type Authentication } from './login-protocols'
+import { type HttpRequest, type EmailValidator, type Authentication, type CredentialModel } from './login-protocols'
 import { HttpHelper } from '../../helpers/http'
 
 const makeEmailValidator = (): EmailValidator => {
@@ -15,8 +15,8 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password: string): Promise<string | null> {
-      return await new Promise(resolve => { resolve('any_token') })
+    async auth (email: string, password: string): Promise<CredentialModel> {
+      return await new Promise(resolve => { resolve(makeFakeCredential()) })
     }
   }
 
@@ -29,6 +29,12 @@ const makeFakeRequest = (): HttpRequest => {
       email: 'any_email@mail.com',
       password: 'any_password'
     }
+  }
+}
+
+const makeFakeCredential = (): CredentialModel => {
+  return {
+    accessToken: 'any_token'
   }
 }
 
@@ -116,7 +122,11 @@ describe('Login Controller', () => {
   test('Should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut()
     jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(async (email: string, password: string) => {
-      return await new Promise(resolve => { resolve(null) })
+      return await new Promise(resolve => {
+        resolve({
+          accessToken: undefined
+        })
+      })
     })
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
@@ -129,8 +139,6 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(HttpHelper.ok({
-      accessToken: 'any_token'
-    }))
+    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeCredential()))
   })
 })

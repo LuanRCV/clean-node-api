@@ -1,3 +1,5 @@
+import { type CredentialModel } from '../models/credential'
+
 export interface Authentication {
-  auth: (email: string, password: string) => Promise<string | null>
+  auth: (email: string, password: string) => Promise<CredentialModel>
 }

@@ -27,13 +27,13 @@ export class LoginController implements Controller {
         return HttpHelper.badRequest(new InvalidParamError('email'))
       }
 
-      const accessToken = await this.authentication.auth(email, password)
+      const credential = await this.authentication.auth(email, password)
 
-      if (!accessToken) {
+      if (!credential.accessToken) {
         return HttpHelper.unauthorized()
       }
 
-      return HttpHelper.ok({ accessToken })
+      return HttpHelper.ok(credential)
     } catch (error) {
       console.error(error)
       return HttpHelper.serverError(error)
