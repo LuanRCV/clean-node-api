@@ -1,4 +1,4 @@
-import { ServerError } from '../errors'
+import { ServerError, UnauthorizedError } from '../errors'
 import { type HttpResponse } from '../protocols/http'
 
 export class HttpHelper {
@@ -6,6 +6,13 @@ export class HttpHelper {
     return {
       statusCode: 400,
       body: error
+    }
+  }
+
+  static unauthorized (): HttpResponse {
+    return {
+      statusCode: 401,
+      body: new UnauthorizedError()
     }
   }
 

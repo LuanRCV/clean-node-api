@@ -27,7 +27,11 @@ export class LoginController implements Controller {
         return HttpHelper.badRequest(new InvalidParamError('email'))
       }
 
-      await this.authentication.auth(email, password)
+      const accessToken = await this.authentication.auth(email, password)
+
+      if (!accessToken) {
+        return HttpHelper.unauthorized()
+      }
 
       return await new Promise(resolve => {
         resolve({
