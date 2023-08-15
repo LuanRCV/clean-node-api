@@ -33,12 +33,7 @@ export class LoginController implements Controller {
         return HttpHelper.unauthorized()
       }
 
-      return await new Promise(resolve => {
-        resolve({
-          statusCode: 200,
-          body: {}
-        })
-      })
+      return HttpHelper.ok({ accessToken })
     } catch (error) {
       console.error(error)
       return HttpHelper.serverError(error)
