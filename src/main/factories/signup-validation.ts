@@ -1,22 +1,18 @@
 import { CompareFieldsValidation } from '../../presentation/helpers/validators/compare-fields-validation'
+import { EmailValidation } from '../../presentation/helpers/validators/email-validation'
 import { RequiredFieldValidation } from '../../presentation/helpers/validators/required-field-validation'
 import { type Validation } from '../../presentation/helpers/validators/validation'
 import { ValidationComposite } from '../../presentation/helpers/validators/validation-composite'
+import { EmailValidatorAdapter } from '../../utils/email-validator-adapter'
 
 export const makeSignUpValidation = (): Validation => {
+  const validations: Validation[] = []
   const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
-  const requiredFieldsValidation = requiredFields.map(field => new RequiredFieldValidation(field))
+  for (const field of requiredFields) {
+    validations.push(new RequiredFieldValidation(field))
+  }
+  validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
+  validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
 
-  const compareFields = [
-    {
-      fieldName: 'password',
-      fieldToCompareName: 'passwordConfirmation'
-    }
-  ]
-  const compareFielsValidation = compareFields.map(item => new CompareFieldsValidation(item.fieldName, item.fieldToCompareName))
-
-  return new ValidationComposite([
-    ...requiredFieldsValidation,
-    ...compareFielsValidation
-  ])
+  return new ValidationComposite(validations)
 }
