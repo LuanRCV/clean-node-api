@@ -2,22 +2,24 @@ import { MissingParamError } from '../../errors'
 import { type Validation } from './validation'
 import { ValidationComposite } from './validation-composite'
 
-class ValidationStub implements Validation {
-  validate (input: any): Error | null {
-    return null
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error | null {
+      return null
+    }
   }
+
+  return new ValidationStub()
 }
 
 interface SutTypes {
   sut: ValidationComposite
-  validationStub: ValidationStub
+  validationStub: Validation
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = new ValidationStub()
-  const sut = new ValidationComposite([
-    validationStub
-  ])
+  const validationStub = makeValidation()
+  const sut = new ValidationComposite([validationStub])
 
   return {
     sut,
