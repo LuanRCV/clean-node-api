@@ -1,6 +1,6 @@
 import { LoginController } from './login'
 import { MissingParamError, ServerError } from '../../errors'
-import { type HttpRequest, type Authentication, type CredentialModel, type Validation, type AuthenticationModel } from './login-protocols'
+import { type HttpRequest, type Authentication, type Validation, type AuthenticationModel } from './login-protocols'
 import { HttpHelper } from '../../helpers/http/http-helper'
 
 const makeValidation = (): Validation => {
@@ -15,7 +15,7 @@ const makeValidation = (): Validation => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<CredentialModel> {
+    async auth (authentication: AuthenticationModel): Promise<string | null> {
       return await new Promise(resolve => { resolve(makeFakeCredential()) })
     }
   }
@@ -32,10 +32,8 @@ const makeFakeRequest = (): HttpRequest => {
   }
 }
 
-const makeFakeCredential = (): CredentialModel => {
-  return {
-    accessToken: 'any_token'
-  }
+const makeFakeCredential = (): string => {
+  return 'any_token'
 }
 
 interface SutTypes {
@@ -84,9 +82,7 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut()
     jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(async (authentication: AuthenticationModel) => {
       return await new Promise(resolve => {
-        resolve({
-          accessToken: undefined
-        })
+        resolve(null)
       })
     })
     const httpRequest = makeFakeRequest()
