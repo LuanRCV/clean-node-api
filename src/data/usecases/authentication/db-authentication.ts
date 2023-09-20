@@ -1,4 +1,3 @@
-import { type CredentialModel } from '../../../domain/models/credential'
 import { type AuthenticationModel, type Authentication } from '../../../domain/usecases/authentication'
 import { type HashComparer } from '../../protocols/criptography/hash-comparer'
 import { type TokenGenerator } from '../../protocols/criptography/token-generator'
@@ -15,16 +14,19 @@ export class DbAuthentication implements Authentication {
     this.tokenGenerator = tokenGenerator
   }
 
-  async auth (authentication: AuthenticationModel): Promise<CredentialModel | null> {
+  async auth (authentication: AuthenticationModel): Promise<string | null> {
     const { email, password } = authentication
 
     const account = await this.loadAccountByEmailRepository.load(email)
 
     if (account) {
-      await this.hashComparer.compare(password, account.password)
+      const isTheSamePassword = await this.hashComparer.compare(password, account.password)
 
-      const { id } = account
-      await this.tokenGenerator.generate(id)
+      if (isTheSamePassword) {
+        const accessToken = await this.tokenGenerator.generate(account.id)
+
+        return accessToken
+      }
     }
 
     return null
