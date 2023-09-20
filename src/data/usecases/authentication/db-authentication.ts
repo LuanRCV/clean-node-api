@@ -9,10 +9,14 @@ export class DbAuthentication implements Authentication {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository
   }
 
-  async auth (authentication: AuthenticationModel): Promise<CredentialModel> {
+  async auth (authentication: AuthenticationModel): Promise<CredentialModel | null> {
     const { email } = authentication
 
-    await this.loadAccountByEmailRepository.load(email)
+    const account = await this.loadAccountByEmailRepository.load(email)
+
+    if (!account) {
+      return null
+    }
 
     return {
       accessToken: 'any_access_token'

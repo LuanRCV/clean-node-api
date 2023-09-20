@@ -5,5 +5,5 @@ export interface AuthenticationModel {
   password: string
 }
 export interface Authentication {
-  auth: (authentication: AuthenticationModel) => Promise<CredentialModel>
+  auth: (authentication: AuthenticationModel) => Promise<CredentialModel | null>
 }

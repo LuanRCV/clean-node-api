@@ -24,7 +24,7 @@ export class LoginController implements Controller {
         password
       })
 
-      if (!credential.accessToken) {
+      if (!credential?.accessToken) {
         return HttpHelper.unauthorized()
       }
 
