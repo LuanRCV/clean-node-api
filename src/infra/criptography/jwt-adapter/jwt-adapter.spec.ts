@@ -19,4 +19,14 @@ describe('Jwt Adapter', () => {
 
     expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
   })
+
+  test('Should throw if jwt sign method throws', async () => {
+    const sut = makeSut()
+    type JwtSignSpy = (payload: string | Buffer | object, secretOrPrivateKey: Secret, options?: SignOptions) => string
+    const jwtSignSpy = jest.spyOn(jwt, 'sign') as unknown as jest.MockedFunction<JwtSignSpy>
+    jwtSignSpy.mockImplementationOnce((payload: string | Buffer | object, secretOrPrivateKey: Secret, options?: SignOptions) => { throw new Error() })
+    const promise = sut.encrypt('any_id')
+
+    await expect(promise).rejects.toThrow()
+  })
 })
