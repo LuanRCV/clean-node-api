@@ -34,6 +34,16 @@ describe('Login Routes', () => {
   })
 
   describe('POST /login', () => {
+    test('Should return 401 with invalid credentials', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'any_mail@mail.com',
+          password: 'any_password'
+        })
+        .expect(401)
+    })
+
     test('Should return 200 on login', async () => {
       const hashedPassword = await hash('any_password', 12)
       await accountCollection.insertOne({
