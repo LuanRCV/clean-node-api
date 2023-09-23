@@ -27,7 +27,6 @@ export class LoginController implements Controller {
 
       return HttpHelper.ok(accessToken)
     } catch (error) {
-      console.error(error)
       return HttpHelper.serverError(error)
     }
   }
