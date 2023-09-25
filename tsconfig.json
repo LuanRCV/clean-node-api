@@ -7,10 +7,10 @@
         "strictNullChecks": true,
         "skipLibCheck": true
     },
-    "include":[
+    "include": [
         "src"
     ],
-    "exclude":[
+    "exclude": [
         "**/**.spec.ts",
         "**/**.test.ts"
     ]
