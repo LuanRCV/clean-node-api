@@ -1,10 +1,14 @@
-FROM node:20
-WORKDIR /usr/app
+FROM node:20 as build
+WORKDIR /usr/src/app
+COPY package*.json .
+RUN npm install
+COPY . .
+RUN npm run build
 
-COPY ./package.json .
+FROM node:20 as production
+WORKDIR /usr/src/app
+COPY package*.json .
 RUN npm install --omit=dev
-
-COPY ./dist ./dist
-
+COPY --from=build /usr/src/app/dist ./dist
 EXPOSE 5050
 CMD npm start
