@@ -10,5 +10,4 @@ WORKDIR /usr/src/app
 COPY package*.json .
 RUN npm install --omit=dev
 COPY --from=build /usr/src/app/dist ./dist
-EXPOSE 5050
 CMD npm start
