@@ -164,6 +164,6 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeAccount()))
+    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeCredential()))
   })
 })
