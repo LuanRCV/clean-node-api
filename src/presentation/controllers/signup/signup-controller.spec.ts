@@ -1,6 +1,6 @@
 import { SignUpController } from './signup-controller'
 import { MissingParamError, ServerError } from '../../errors'
-import { type Authentication, type AccountModel, type AddAccount, type AddAccountModel, type HttpRequest, type Validation, type AuthenticationModel } from './signup-controller-protocols'
+import { type Authentication, type AccountModel, type AddAccount, type AddAccountModel, type HttpRequest, type Validation, type AuthenticationModel, type CredentialModel } from './signup-controller-protocols'
 import { HttpHelper } from '../../helpers/http/http-helper'
 
 const makeValidation = (): Validation => {
@@ -27,7 +27,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string | null> {
+    async auth (authentication: AuthenticationModel): Promise<CredentialModel | null> {
       return await new Promise(resolve => { resolve(makeFakeCredential()) })
     }
   }
@@ -35,8 +35,10 @@ const makeAuthentication = (): Authentication => {
   return new AuthenticationStub()
 }
 
-const makeFakeCredential = (): string => {
-  return 'any_token'
+const makeFakeCredential = (): CredentialModel => {
+  return {
+    accessToken: 'any_token'
+  }
 }
 
 const makeFakeAccount = (): AccountModel => {

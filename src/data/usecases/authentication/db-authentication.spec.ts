@@ -173,6 +173,8 @@ describe('DbAuthentication Usecase', () => {
     const { sut } = makeSut()
     const accessToken = await sut.auth(makeFakeAuthenticationData())
 
-    expect(accessToken).toBe('any_access_token')
+    expect(accessToken).toEqual({
+      accessToken: 'any_access_token'
+    })
   })
 })
