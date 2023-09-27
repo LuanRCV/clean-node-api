@@ -1,5 +1,6 @@
 import { type Controller, type HttpRequest, type HttpResponse, type AddAccount, type Validation, type Authentication } from './signup-controller-protocols'
 import { HttpHelper } from '../../helpers/http/http-helper'
+import { EmailInUseError } from '../../errors'
 
 export class SignUpController implements Controller {
   constructor (
@@ -17,11 +18,15 @@ export class SignUpController implements Controller {
 
       const { name, email, password } = httpRequest.body
 
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
+
+      if (!account) {
+        return HttpHelper.forbidden(new EmailInUseError())
+      }
 
       const credential = await this.authentication.auth({
         email,

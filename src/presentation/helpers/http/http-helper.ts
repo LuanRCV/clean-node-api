@@ -9,6 +9,13 @@ export class HttpHelper {
     }
   }
 
+  static forbidden (error: Error): HttpResponse {
+    return {
+      statusCode: 403,
+      body: error
+    }
+  }
+
   static unauthorized (): HttpResponse {
     return {
       statusCode: 401,
