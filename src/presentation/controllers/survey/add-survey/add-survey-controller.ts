@@ -21,12 +21,7 @@ export class AddSurveyController implements Controller {
         answers
       })
 
-      return await new Promise(resolve => {
-        resolve({
-          statusCode: 200,
-          body: {}
-        })
-      })
+      return HttpHelper.noContent()
     } catch (error) {
       return HttpHelper.serverError(error)
     }

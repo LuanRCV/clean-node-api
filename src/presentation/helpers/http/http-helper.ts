@@ -30,6 +30,13 @@ export class HttpHelper {
     }
   }
 
+  static noContent (): HttpResponse {
+    return {
+      statusCode: 204,
+      body: null
+    }
+  }
+
   static ok (data: any): HttpResponse {
     return {
       statusCode: 200,
