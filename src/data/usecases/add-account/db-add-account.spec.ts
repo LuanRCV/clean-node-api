@@ -78,6 +78,14 @@ describe('DbAccount Usecase', () => {
     expect(loadAccountByEmailRepositorySpy).toHaveBeenCalledWith('valid_email@mail.com')
   })
 
+  test('Should throw if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const promise = sut.add(makeFakeAccountData())
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hashSpy = jest.spyOn(hasherStub, 'hash')
