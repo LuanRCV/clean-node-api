@@ -1,3 +1,3 @@
 export interface CredentialModel {
-  accessToken?: string
+  accessToken: string
 }

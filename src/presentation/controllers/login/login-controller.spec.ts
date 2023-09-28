@@ -1,6 +1,6 @@
 import { LoginController } from './login-controller'
 import { MissingParamError, ServerError } from '../../errors'
-import { type HttpRequest, type Authentication, type Validation, type AuthenticationModel } from './login-controller-protocols'
+import { type HttpRequest, type Authentication, type Validation, type AuthenticationModel, type CredentialModel } from './login-controller-protocols'
 import { HttpHelper } from '../../helpers/http/http-helper'
 
 const makeValidation = (): Validation => {
@@ -15,7 +15,7 @@ const makeValidation = (): Validation => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string | null> {
+    async auth (authentication: AuthenticationModel): Promise<CredentialModel | null> {
       return await new Promise(resolve => { resolve(makeFakeCredential()) })
     }
   }
@@ -32,8 +32,10 @@ const makeFakeRequest = (): HttpRequest => {
   }
 }
 
-const makeFakeCredential = (): string => {
-  return 'any_token'
+const makeFakeCredential = (): CredentialModel => {
+  return {
+    accessToken: 'any_token'
+  }
 }
 
 interface SutTypes {
