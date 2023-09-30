@@ -33,7 +33,6 @@ const makeFakeRequest = (): HttpRequest => {
           text: 'any_answer_1'
         },
         {
-          image: 'any_image_2',
           text: 'any_answer_2'
         }
       ]
