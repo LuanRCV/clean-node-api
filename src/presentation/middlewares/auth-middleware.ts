@@ -1,5 +1,5 @@
 import { type LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
-import { AccessDeniedError, ServerError } from '../errors'
+import { AccessDeniedError } from '../errors'
 import { HttpHelper } from '../helpers/http/http-helper'
 import { type Middleware, type HttpRequest, type HttpResponse } from '../protocols'
 
@@ -22,7 +22,7 @@ export class AuthMiddleware implements Middleware {
 
       return HttpHelper.forbidden(new AccessDeniedError())
     } catch (error) {
-      return HttpHelper.serverError(new ServerError())
+      return HttpHelper.serverError(error)
     }
   }
 }
