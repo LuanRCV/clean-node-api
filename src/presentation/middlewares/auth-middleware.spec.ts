@@ -80,4 +80,13 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse).toEqual(HttpHelper.serverError(new ServerError()))
   })
+
+  test('Should return 200 if LoadAccountByToken returns an account', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(HttpHelper.ok({
+      accountId: 'any_id'
+    }))
+  })
 })
