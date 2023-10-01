@@ -16,7 +16,7 @@ export class AuthMiddleware implements Middleware {
         const account = await this.loadAccountByToken.load(accessToken)
 
         if (account) {
-          return HttpHelper.ok({})
+          return HttpHelper.ok({ accountId: account.id })
         }
       }
 
