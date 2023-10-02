@@ -1,4 +1,4 @@
-import jwt, { type VerifyOptions, type Secret, type SignOptions, type Jwt } from 'jsonwebtoken'
+import jwt, { type VerifyOptions, type Secret, type SignOptions } from 'jsonwebtoken'
 import { JwtAdapter } from './jwt-adapter'
 
 jest.mock('jsonwebtoken', () => ({
@@ -6,14 +6,8 @@ jest.mock('jsonwebtoken', () => ({
     return 'any_token'
   },
 
-  verify (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }): Jwt {
-    return {
-      header: { alg: 'HS256' },
-      payload: {
-        id: 'any_id'
-      },
-      signature: 'any_signature'
-    }
+  verify (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }): string {
+    return 'any_id'
   }
 }))
 
@@ -60,6 +54,13 @@ describe('Jwt Adapter', () => {
         await sut.decrypt('any_token')
 
         expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret')
+      })
+
+      test('Should return a value on success', async () => {
+        const sut = makeSut()
+        const value = await sut.decrypt('any_token')
+
+        expect(value).toBe('any_id')
       })
     })
   })
