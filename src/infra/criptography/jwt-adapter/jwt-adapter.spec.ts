@@ -56,12 +56,22 @@ describe('Jwt Adapter', () => {
         expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret')
       })
 
-      test('Should return a value on success', async () => {
+      test('Should throw if verify throws', async () => {
         const sut = makeSut()
-        const value = await sut.decrypt('any_token')
+        type JwtVerifySpy = (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }) => string
+        const jwtSignSpy = jest.spyOn(jwt, 'verify') as unknown as jest.MockedFunction<JwtVerifySpy>
+        jwtSignSpy.mockImplementationOnce((token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }) => { throw new Error() })
+        const promise = sut.decrypt('any_token')
 
-        expect(value).toBe('any_id')
+        await expect(promise).rejects.toThrow()
       })
+    })
+
+    test('Should return a value on success', async () => {
+      const sut = makeSut()
+      const value = await sut.decrypt('any_token')
+
+      expect(value).toBe('any_id')
     })
   })
 })
