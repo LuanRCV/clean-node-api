@@ -10,7 +10,11 @@ export class DbLoadAccountByToken implements LoadAccountByToken {
     const accountId = await this.decrypter.decrypt(accessToken)
 
     if (accountId) {
-      await this.loadAccountByIdRepository.loadById(accountId)
+      const account = await this.loadAccountByIdRepository.loadById(accountId)
+
+      if (account) {
+        return account
+      }
     }
 
     return null
