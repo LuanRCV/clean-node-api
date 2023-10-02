@@ -63,7 +63,7 @@ describe('Account Mongo Repository', () => {
 
   test('Should return null on loadById fail', async () => {
     const sut = makeSut()
-    const account = await sut.loadByEmail('any_id')
+    const account = await sut.loadById('any_id')
 
     expect(account).toBeFalsy()
   })
