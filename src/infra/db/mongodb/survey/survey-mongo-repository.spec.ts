@@ -19,6 +19,9 @@ const makeFakeSurveyData = (): AddSurveyModel => {
     ]
   }
 }
+const makeSut = (): SurveyMongoRepository => {
+  return new SurveyMongoRepository()
+}
 
 describe('Survey Mongo Repository', () => {
   beforeAll(async () => {
@@ -34,25 +37,23 @@ describe('Survey Mongo Repository', () => {
     await surveyCollection.deleteMany({})
   })
 
-  const makeSut = (): SurveyMongoRepository => {
-    return new SurveyMongoRepository()
-  }
+  describe('Method add', () => {
+    test('Should add a survey on success', async () => {
+      const sut = makeSut()
+      await sut.add(makeFakeSurveyData())
+      const survey = await surveyCollection.findOne({ question: 'any_question' })
 
-  test('Should add a survey on add success', async () => {
-    const sut = makeSut()
-    await sut.add(makeFakeSurveyData())
-    const survey = await surveyCollection.findOne({ question: 'any_question' })
-
-    expect(survey).toBeTruthy()
-    expect(survey._id).toBeTruthy()
-    expect(survey.question).toBe('any_question')
-    expect(survey.answers).toBeTruthy()
-    expect(survey.answers[0]).toEqual({
-      image: 'any_image_1',
-      text: 'any_answer_1'
-    })
-    expect(survey.answers[1]).toEqual({
-      text: 'any_answer_2'
+      expect(survey).toBeTruthy()
+      expect(survey._id).toBeTruthy()
+      expect(survey.question).toBe('any_question')
+      expect(survey.answers).toBeTruthy()
+      expect(survey.answers[0]).toEqual({
+        image: 'any_image_1',
+        text: 'any_answer_1'
+      })
+      expect(survey.answers[1]).toEqual({
+        text: 'any_answer_2'
+      })
     })
   })
 })
