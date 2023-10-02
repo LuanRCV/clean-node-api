@@ -3,7 +3,7 @@ import { DbLoadAccountByToken } from './db-load-account-by-token'
 
 const makeDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string | null> {
+    async decrypt (accessToken: string): Promise<string | null> {
       return await new Promise(resolve => { resolve('any_value') })
     }
   }
