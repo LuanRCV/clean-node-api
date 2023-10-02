@@ -1,4 +1,4 @@
-import jwt, { type VerifyOptions, type Secret, type SignOptions } from 'jsonwebtoken'
+import jwt, { type VerifyOptions, type Secret, type SignOptions, type JwtPayload } from 'jsonwebtoken'
 import { JwtAdapter } from './jwt-adapter'
 
 jest.mock('jsonwebtoken', () => ({
@@ -6,8 +6,10 @@ jest.mock('jsonwebtoken', () => ({
     return 'any_token'
   },
 
-  verify (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }): string {
-    return 'any_id'
+  verify (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }): JwtPayload {
+    return {
+      id: 'any_id'
+    }
   }
 }))
 

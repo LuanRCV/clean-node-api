@@ -68,7 +68,7 @@ describe('Account Mongo Repository', () => {
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
       const sut = makeSut()
-      const account = await sut.loadById('any_id')
+      const account = await sut.loadById('651b1652649fa6170c7a3a30')
 
       expect(account).toBeNull()
     })

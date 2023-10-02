@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { type JwtPayload } from 'jsonwebtoken'
 import { type Encrypter } from '../../../data/protocols/criptography/encrypter'
 import { type Decrypter } from '../../../data/protocols/criptography/decrypter'
 
@@ -13,7 +13,8 @@ export class JwtAdapter implements Encrypter, Decrypter {
   }
 
   async decrypt (accessToken: string): Promise<string | null> {
-    const jwtData: any = jwt.verify(accessToken, this.secret)
-    return jwtData
+    const jwtData = jwt.verify(accessToken, this.secret) as JwtPayload
+
+    return jwtData.id
   }
 }
