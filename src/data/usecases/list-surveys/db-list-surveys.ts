@@ -6,7 +6,7 @@ export class DbListSurveys implements ListSurveys {
   ) { }
 
   async list (): Promise<SurveyModel[]> {
-    await this.listSurveysRepository.list()
-    return await new Promise(resolve => { resolve([]) })
+    const surveys = await this.listSurveysRepository.list()
+    return surveys
   }
 }
