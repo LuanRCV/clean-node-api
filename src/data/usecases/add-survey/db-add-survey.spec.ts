@@ -14,6 +14,7 @@ const makeAddSurveyRepository = (): AddSurveyRepository => {
 const makeFakeSurveyData = (): AddSurveyModel => {
   return {
     question: 'any_question',
+    date: new Date(),
     answers: [
       {
         image: 'any_image_1',

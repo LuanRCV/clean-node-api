@@ -15,10 +15,11 @@ export class AddSurveyController implements Controller {
         return HttpHelper.badRequest(validationError)
       }
 
-      const { question, answers } = httpRequest.body
+      const { question, answers, date } = httpRequest.body
       await this.addSurvey.add({
         question,
-        answers
+        answers,
+        date: date || new Date()
       })
 
       return HttpHelper.noContent()
