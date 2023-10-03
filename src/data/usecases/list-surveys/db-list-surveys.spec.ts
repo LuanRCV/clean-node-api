@@ -61,6 +61,13 @@ describe('DbListSurveys Usecase', () => {
 
         await expect(promise).rejects.toThrow()
       })
+
+      test('Should return a list of surveys on success', async () => {
+        const { sut } = makeSut()
+        const surveys = await sut.list()
+
+        expect(surveys).toEqual([makeFakeSurvey()])
+      })
     })
   })
 })
