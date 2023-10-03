@@ -68,12 +68,12 @@ describe('Account Mongo Repository', () => {
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
       const sut = makeSut()
-      const account = await sut.loadById('651b1652649fa6170c7a3a30')
+      const account = await sut.loadById('any_id')
 
       expect(account).toBeNull()
     })
 
-    test('Should return an account on success', async () => {
+    test('Should return an account without role with success', async () => {
       const sut = makeSut()
       const result = await accountCollection.insertOne({
         name: 'any_name',
@@ -88,6 +88,57 @@ describe('Account Mongo Repository', () => {
       expect(account?.name).toBe('any_name')
       expect(account?.email).toBe('any_email@mail.com')
       expect(account?.password).toBe('any_password')
+    })
+
+    test('Should return null with invalid role', async () => {
+      const sut = makeSut()
+      const result = await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
+      const newAccount = result.ops[0]
+      const account = await sut.loadById(newAccount._id, 'admin')
+
+      expect(account).toBeNull()
+    })
+
+    test('Should return an account with admin role with success', async () => {
+      const sut = makeSut()
+      const result = await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        role: 'admin'
+      })
+      const newAccount = result.ops[0]
+      const account = await sut.loadById(newAccount._id, 'admin')
+
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('any_name')
+      expect(account?.email).toBe('any_email@mail.com')
+      expect(account?.password).toBe('any_password')
+      expect(account?.role).toBe('admin')
+    })
+
+    test('Should return an account if user is admin', async () => {
+      const sut = makeSut()
+      const result = await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        role: 'admin'
+      })
+      const newAccount = result.ops[0]
+      const account = await sut.loadById(newAccount._id)
+
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('any_name')
+      expect(account?.email).toBe('any_email@mail.com')
+      expect(account?.password).toBe('any_password')
+      expect(account?.role).toBe('admin')
     })
   })
 

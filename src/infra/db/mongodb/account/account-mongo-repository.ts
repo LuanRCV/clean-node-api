@@ -29,7 +29,14 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
   async loadById (id: string, role?: string): Promise<AccountModel | null> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const _id = MongoHelper.mapObjectId(id)
-    const account = await accountCollection.findOne({ _id, role })
+    const account = await accountCollection.findOne({
+      _id,
+      $or: [{
+        role
+      }, {
+        role: 'admin'
+      }]
+    })
 
     if (account) {
       return MongoHelper.mapEntity<AccountModel>(account)
