@@ -62,6 +62,14 @@ describe('ListSurveys Controller', () => {
     expect(httpResponse).toEqual(HttpHelper.serverError(new ServerError()))
   })
 
+  test('Should return 204 if ListSurveys returns empty', async () => {
+    const { sut, listSurveysStub } = makeSut()
+    jest.spyOn(listSurveysStub, 'list').mockReturnValueOnce(new Promise((resolve, reject) => { resolve([]) }))
+    const httpResponse = await sut.handle({})
+
+    expect(httpResponse).toEqual(HttpHelper.noContent())
+  })
+
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
