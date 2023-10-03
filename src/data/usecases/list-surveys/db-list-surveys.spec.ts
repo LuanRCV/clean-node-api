@@ -53,6 +53,14 @@ describe('DbListSurveys Usecase', () => {
 
         expect(listSpy).toHaveBeenCalled()
       })
+
+      test('Should throw if list throws', async () => {
+        const { sut, listSurveysRepositoryStub } = makeSut()
+        jest.spyOn(listSurveysRepositoryStub, 'list').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+        const promise = sut.list()
+
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
 })
