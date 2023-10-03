@@ -103,9 +103,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Validation throws', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
@@ -127,9 +125,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 403 if AddAccount returns null', async () => {
     const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => { resolve(null) })
-    })
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => { resolve(null) }))
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
@@ -138,9 +134,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => { reject(new Error()) })
-    })
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
@@ -161,9 +155,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => { reject(new Error()) })
-    })
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 

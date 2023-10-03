@@ -1,4 +1,4 @@
-import { MongoClient, type Collection } from 'mongodb'
+import { MongoClient, type Collection, ObjectId } from 'mongodb'
 
 export class MongoHelper {
   static client: MongoClient
@@ -22,6 +22,16 @@ export class MongoHelper {
     }
 
     return this.client.db().collection(name)
+  }
+
+  static mapObjectId (id: string): ObjectId | null {
+    const isValidId = ObjectId.isValid(id)
+
+    if (isValidId) {
+      return new ObjectId(id)
+    }
+
+    return null
   }
 
   static mapEntity<T> (entity: any): T {

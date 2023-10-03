@@ -34,28 +34,37 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Email Validation', () => {
-  test('Should return an error if EmailValidator returns false', () => {
-    const { sut, emailValidatorStub } = makeSut()
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-    const validationResponse = sut.validate(makeFakeInput())
+  describe('Method validate', () => {
+    describe('EmailValidator integration', () => {
+      test('Should call isValid with correct email', () => {
+        const { sut, emailValidatorStub } = makeSut()
+        const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+        sut.validate(makeFakeInput())
 
-    expect(validationResponse).toEqual(new InvalidParamError('email'))
-  })
+        expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
+      })
 
-  test('Should call EmailValidator with correct email', () => {
-    const { sut, emailValidatorStub } = makeSut()
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
-    sut.validate(makeFakeInput())
+      test('Should return an error if isValid returns false', () => {
+        const { sut, emailValidatorStub } = makeSut()
+        jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
+        const validationResponse = sut.validate(makeFakeInput())
 
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
-  })
+        expect(validationResponse).toEqual(new InvalidParamError('email'))
+      })
 
-  test('Should throw if EmailValidator throws', () => {
-    const { sut, emailValidatorStub } = makeSut()
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
+      test('Should throw if isValid throws', () => {
+        const { sut, emailValidatorStub } = makeSut()
+        jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+
+        expect(sut.validate).toThrow()
+      })
     })
 
-    expect(sut.validate).toThrow()
+    test('Should return null on success', () => {
+      const { sut } = makeSut()
+      const validationError = sut.validate(makeFakeInput())
+
+      expect(validationError).toBeNull()
+    })
   })
 })

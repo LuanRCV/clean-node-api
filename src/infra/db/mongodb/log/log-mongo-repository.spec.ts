@@ -2,13 +2,13 @@ import { type Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo'
 import { LogMongoRepository } from './log-mongo-repository'
 
+let errorCollection: Collection
+
 const makeSut = (): LogMongoRepository => {
   return new LogMongoRepository()
 }
 
 describe('Log Mongo Repository', () => {
-  let errorCollection: Collection
-
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
   })
@@ -22,11 +22,13 @@ describe('Log Mongo Repository', () => {
     await errorCollection.deleteMany({})
   })
 
-  test('Should create an error log on success', async () => {
-    const sut = makeSut()
-    await sut.logError('any_error')
-    const count = await errorCollection.countDocuments()
+  describe('Method logError', () => {
+    test('Should create an error on success', async () => {
+      const sut = makeSut()
+      await sut.logError('any_error')
+      const count = await errorCollection.countDocuments()
 
-    expect(count).toBe(1)
+      expect(count).toBe(1)
+    })
   })
 })
