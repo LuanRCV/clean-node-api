@@ -8,13 +8,8 @@ export class ListSurveysController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      await this.listSurveys.list()
-      return await new Promise(resolve => {
-        resolve({
-          statusCode: 200,
-          body: {}
-        })
-      })
+      const surveys = await this.listSurveys.list()
+      return HttpHelper.ok(surveys)
     } catch (error) {
       return HttpHelper.serverError(error)
     }
