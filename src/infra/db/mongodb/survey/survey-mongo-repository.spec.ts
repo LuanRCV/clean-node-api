@@ -57,4 +57,33 @@ describe('Survey Mongo Repository', () => {
       })
     })
   })
+
+  describe('Method list', () => {
+    test('Should load an empty list', async () => {
+      const sut = makeSut()
+      const surveys = await sut.list()
+
+      expect(surveys).toBeTruthy()
+      expect(surveys.length).toBe(0)
+    })
+
+    test('Should list all surveys on success', async () => {
+      const sut = makeSut()
+      await surveyCollection.insert(makeFakeSurveyData())
+      const surveys = await sut.list()
+
+      expect(surveys).toBeTruthy()
+      expect(surveys.length).toBe(1)
+      expect(surveys[0].id).toBeTruthy()
+      expect(surveys[0].question).toBe('any_question')
+      expect(surveys[0].answers).toBeTruthy()
+      expect(surveys[0].answers[0]).toEqual({
+        image: 'any_image_1',
+        text: 'any_answer_1'
+      })
+      expect(surveys[0].answers[1]).toEqual({
+        text: 'any_answer_2'
+      })
+    })
+  })
 })
