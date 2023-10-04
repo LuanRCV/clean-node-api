@@ -87,5 +87,67 @@ describe('Survey Routes', () => {
         .get('/api/surveys')
         .expect(403)
     })
+
+    test('Should return 200 on list surveys with valid accessToken and not empty list of surveys', async () => {
+      const result = await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_mail@mail.com',
+        password: 'any_password',
+        role: 'admin'
+      })
+
+      const id = result.ops[0]._id
+      const accessToken = jwt.sign({ id }, env.jwtSecret)
+      await accountCollection.updateOne({
+        _id: id
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+
+      await surveyCollection.insertOne({
+        question: 'any_question',
+        date: new Date(),
+        answers: [
+          {
+            image: 'any_image_1',
+            text: 'any_answer_1'
+          },
+          {
+            text: 'any_answer_2'
+          }
+        ]
+      })
+
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+
+    test('Should return 204 on list surveys with valid accessToken and empty list of surveys', async () => {
+      const result = await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_mail@mail.com',
+        password: 'any_password',
+        role: 'admin'
+      })
+
+      const id = result.ops[0]._id
+      const accessToken = jwt.sign({ id }, env.jwtSecret)
+      await accountCollection.updateOne({
+        _id: id
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
   })
 })
