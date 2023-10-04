@@ -30,7 +30,7 @@ const makeFakeAccount = (): AccountModel => {
   }
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterStub: Decrypter
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository

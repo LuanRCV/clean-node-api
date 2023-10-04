@@ -1,6 +1,6 @@
 import { type CredentialModel } from '../models/credential'
 
-export interface AuthenticationModel {
+export type AuthenticationModel = {
   email: string
   password: string
 }

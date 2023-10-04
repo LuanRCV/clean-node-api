@@ -1,6 +1,6 @@
 import { type SurveyAnswer } from '../models/survey'
 
-export interface AddSurveyModel {
+export type AddSurveyModel = {
   question: string
   date: Date
   answers: SurveyAnswer[]
