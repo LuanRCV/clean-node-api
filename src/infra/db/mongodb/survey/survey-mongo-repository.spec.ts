@@ -59,7 +59,15 @@ describe('Survey Mongo Repository', () => {
   })
 
   describe('Method list', () => {
-    test('Should load all surveys on success', async () => {
+    test('Should load an empty list', async () => {
+      const sut = makeSut()
+      const surveys = await sut.list()
+
+      expect(surveys).toBeTruthy()
+      expect(surveys.length).toBe(0)
+    })
+
+    test('Should list all surveys on success', async () => {
       const sut = makeSut()
       await surveyCollection.insert(makeFakeSurveyData())
       const surveys = await sut.list()
