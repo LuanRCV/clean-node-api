@@ -1,5 +1,6 @@
 import { type SurveyModel, type ListSurveysRepository } from './db-list-surveys-protocols'
 import { DbListSurveys } from './db-list-surveys'
+import MockDate from 'mockdate'
 
 const makeFakeSurvey = (): SurveyModel => {
   return {
@@ -44,6 +45,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbListSurveys Usecase', () => {
+  beforeAll(() => {
+    MockDate.set('1996-06-07')
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   describe('Method list', () => {
     describe('ListSurveysRepository integration', () => {
       test('Should call list', async () => {
