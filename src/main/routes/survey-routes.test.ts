@@ -8,6 +8,27 @@ import env from '../config/env'
 let surveyCollection: Collection
 let accountCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const result = await accountCollection.insertOne({
+    name: 'any_name',
+    email: 'any_mail@mail.com',
+    password: 'any_password',
+    role: 'admin'
+  })
+
+  const id = result.ops[0]._id
+  const accessToken = jwt.sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+
+  return accessToken
+}
+
 describe('Survey Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
@@ -45,23 +66,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on add with valid accessToken', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_mail@mail.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-
-      const id = result.ops[0]._id
-      const accessToken = jwt.sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
-
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -89,23 +94,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 200 on list surveys with valid accessToken and not empty list of surveys', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_mail@mail.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-
-      const id = result.ops[0]._id
-      const accessToken = jwt.sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
-
+      const accessToken = await makeAccessToken()
       await surveyCollection.insertOne({
         question: 'any_question',
         date: new Date(),
@@ -127,23 +116,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on list surveys with valid accessToken and empty list of surveys', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_mail@mail.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-
-      const id = result.ops[0]._id
-      const accessToken = jwt.sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
-
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
