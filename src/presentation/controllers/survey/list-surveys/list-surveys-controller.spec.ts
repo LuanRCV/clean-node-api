@@ -2,6 +2,7 @@ import { type SurveyModel, type ListSurveys } from './list-surveys-controller-pr
 import { ListSurveysController } from './list-surveys-controller'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors'
+import MockDate from 'mockdate'
 
 const makeFakeSurvey = (): SurveyModel => {
   return {
@@ -30,7 +31,7 @@ const makeListSurveys = (): ListSurveys => {
   return new ListSurveysStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: ListSurveysController
   listSurveysStub: ListSurveys
 }
@@ -46,6 +47,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('ListSurveys Controller', () => {
+  beforeAll(() => {
+    MockDate.set('1996-06-07')
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('Should call ListSurveys', async () => {
     const { sut, listSurveysStub } = makeSut()
     const listSpy = jest.spyOn(listSurveysStub, 'list')

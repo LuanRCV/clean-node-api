@@ -38,7 +38,7 @@ const makeFakeCredential = (): CredentialModel => {
   }
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: LoginController
   authenticationStub: Authentication
   validationStub: Validation

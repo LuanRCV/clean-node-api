@@ -18,7 +18,7 @@ const makeFakeInput = (): any => {
   }
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: EmailValidation
   emailValidatorStub: EmailValidator
 }

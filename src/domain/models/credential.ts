@@ -1,3 +1,3 @@
-export interface CredentialModel {
+export type CredentialModel = {
   accessToken: string
 }
