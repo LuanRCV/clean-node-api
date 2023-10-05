@@ -2,11 +2,13 @@ import { type HttpRequest, type Controller, type HttpResponse, type Validation }
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { type LoadSurveyById } from '@domain/usecases/load-survey-by-id'
 import { SurveyNotFoundError } from '../../../errors'
+import { type SaveSurveyResult } from '@domain/usecases/save-survey-result'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly loadSurveyById: LoadSurveyById
+    private readonly loadSurveyById: LoadSurveyById,
+    private readonly saveSurveyResult: SaveSurveyResult
   ) { }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -21,6 +23,7 @@ export class SaveSurveyResultController implements Controller {
       const survey = await this.loadSurveyById.loadById(surveyId)
 
       if (survey) {
+        await this.saveSurveyResult.save(httpRequest.body)
         return HttpHelper.noContent()
       }
 
