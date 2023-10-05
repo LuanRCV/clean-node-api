@@ -1,6 +1,7 @@
 import { type HttpRequest, type Controller, type HttpResponse, type Validation } from './save-survey-result-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { type LoadSurveyById } from '@domain/usecases/load-survey-by-id'
+import { SurveyNotFoundError } from '../../../errors'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
@@ -17,9 +18,13 @@ export class SaveSurveyResultController implements Controller {
       }
 
       const { surveyId } = httpRequest.params
-      await this.loadSurveyById.loadById(surveyId)
+      const survey = await this.loadSurveyById.loadById(surveyId)
 
-      return HttpHelper.noContent()
+      if (survey) {
+        return HttpHelper.noContent()
+      }
+
+      return HttpHelper.forbidden(new SurveyNotFoundError())
     } catch (error) {
       return HttpHelper.serverError(error)
     }
