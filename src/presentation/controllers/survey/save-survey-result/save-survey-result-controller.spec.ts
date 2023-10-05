@@ -1,12 +1,16 @@
-import { type Validation, type HttpRequest } from './save-survey-result-protocols'
+import {
+  type Validation,
+  type HttpRequest,
+  type LoadSurveyById,
+  type SaveSurveyResult,
+  type SaveSurveyResultModel,
+  type SurveyResultModel,
+  type SurveyModel
+} from './save-survey-result-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { MissingParamError, ServerError, SurveyNotFoundError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
-import { type SurveyModel } from '../list-surveys/list-surveys-controller-protocols'
-import { type LoadSurveyById } from '@domain/usecases/load-survey-by-id'
-import { type SaveSurveyResult, type SaveSurveyResultModel } from '@domain/usecases/save-survey-result'
 import MockDate from 'mockdate'
-import { type SurveyResultModel } from '@domain/models/survey-result'
 
 const makeFakeSurvey = (): SurveyModel => {
   return {

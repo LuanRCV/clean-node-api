@@ -1,8 +1,13 @@
-import { type HttpRequest, type Controller, type HttpResponse, type Validation } from './save-survey-result-protocols'
+import {
+  type HttpRequest,
+  type Controller,
+  type HttpResponse,
+  type Validation,
+  type LoadSurveyById,
+  type SaveSurveyResult
+} from './save-survey-result-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
-import { type LoadSurveyById } from '@domain/usecases/load-survey-by-id'
 import { SurveyNotFoundError } from '../../../errors'
-import { type SaveSurveyResult } from '@domain/usecases/save-survey-result'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
