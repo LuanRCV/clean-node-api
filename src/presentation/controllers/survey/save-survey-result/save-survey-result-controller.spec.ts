@@ -2,6 +2,25 @@ import { type Validation, type HttpRequest } from './save-survey-result-protocol
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
+import { type SurveyModel } from '../list-surveys/list-surveys-controller-protocols'
+import { type LoadSurveyById } from '@domain/usecases/load-survey-by-id'
+
+const makeFakeSurvey = (): SurveyModel => {
+  return {
+    id: 'any_id',
+    question: 'any_question',
+    date: new Date(),
+    answers: [
+      {
+        image: 'any_image_url_1',
+        text: 'any_text_1'
+      },
+      {
+        text: 'any_text_2'
+      }
+    ]
+  }
+}
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -13,8 +32,21 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
+const makeLoadSurveyById = (): LoadSurveyById => {
+  class LoadSurveyByIdStub implements LoadSurveyById {
+    async loadById (id: string): Promise<SurveyModel> {
+      return await new Promise(resolve => { resolve(makeFakeSurvey()) })
+    }
+  }
+
+  return new LoadSurveyByIdStub()
+}
+
 const makeFakeRequest = (): HttpRequest => {
   return {
+    params: {
+      surveyId: 'any_survey_id'
+    },
     body: {
       question: 'any_question',
       date: new Date(),
@@ -34,15 +66,18 @@ const makeFakeRequest = (): HttpRequest => {
 type SutTypes = {
   sut: SaveSurveyResultController
   validationStub: Validation
+  loadSurveyByIdStub: LoadSurveyById
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
-  const sut = new SaveSurveyResultController(validationStub)
+  const loadSurveyByIdStub = makeLoadSurveyById()
+  const sut = new SaveSurveyResultController(validationStub, loadSurveyByIdStub)
 
   return {
     sut,
-    validationStub
+    validationStub,
+    loadSurveyByIdStub
   }
 }
 
@@ -72,5 +107,14 @@ describe('SaveSurveyResult Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual(HttpHelper.serverError(new ServerError()))
+  })
+
+  test('Should call LoadSurveyById with correct id', async () => {
+    const { sut, loadSurveyByIdStub } = makeSut()
+    const validateSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+
+    expect(validateSpy).toHaveBeenCalledWith('any_survey_id')
   })
 })
