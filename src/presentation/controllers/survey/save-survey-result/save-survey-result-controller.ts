@@ -23,8 +23,9 @@ export class SaveSurveyResultController implements Controller {
       const survey = await this.loadSurveyById.loadById(surveyId)
 
       if (survey) {
-        await this.saveSurveyResult.save(httpRequest.body)
-        return HttpHelper.noContent()
+        const surveyResult = await this.saveSurveyResult.save(httpRequest.body)
+
+        return HttpHelper.ok(surveyResult)
       }
 
       return HttpHelper.forbidden(new SurveyNotFoundError())
