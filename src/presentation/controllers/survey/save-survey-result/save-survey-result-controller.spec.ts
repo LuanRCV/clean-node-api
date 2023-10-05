@@ -177,4 +177,11 @@ describe('SaveSurveyResult Controller', () => {
 
     expect(httpResponse).toEqual(HttpHelper.serverError(new ServerError()))
   })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeSurveyResult()))
+  })
 })
