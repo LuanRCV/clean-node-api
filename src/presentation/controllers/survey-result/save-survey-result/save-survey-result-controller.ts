@@ -7,7 +7,7 @@ import {
   type SaveSurveyResult
 } from './save-survey-result-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
-import { SurveyNotFoundError } from '../../../errors'
+import { InvalidParamError, SurveyNotFoundError } from '../../../errors'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
@@ -25,15 +25,21 @@ export class SaveSurveyResultController implements Controller {
       }
 
       const { surveyId } = httpRequest.params
+      const { answer } = httpRequest.body
       const survey = await this.loadSurveyById.load(surveyId)
 
       if (survey) {
-        const surveyResult = await this.saveSurveyResult.save(httpRequest.body)
+        const answers = survey.answers.map(answer => answer.text)
+        if (answers.includes(answer)) {
+          const surveyResult = await this.saveSurveyResult.save(httpRequest.body)
 
-        return HttpHelper.ok(surveyResult)
+          return HttpHelper.ok(surveyResult)
+        } else {
+          return HttpHelper.forbidden(new InvalidParamError('answer'))
+        }
+      } else {
+        return HttpHelper.forbidden(new SurveyNotFoundError())
       }
-
-      return HttpHelper.forbidden(new SurveyNotFoundError())
     } catch (error) {
       return HttpHelper.serverError(error)
     }
