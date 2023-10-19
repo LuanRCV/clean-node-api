@@ -86,4 +86,13 @@ describe('Survey Mongo Repository', () => {
       })
     })
   })
+
+  describe('Method loadById', () => {
+    test('Should return null on fail', async () => {
+      const sut = makeSut()
+      const survey = await sut.loadById('any_id')
+
+      expect(survey).toBeNull()
+    })
+  })
 })
