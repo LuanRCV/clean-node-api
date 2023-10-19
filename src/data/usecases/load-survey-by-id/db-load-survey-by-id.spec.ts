@@ -78,13 +78,13 @@ describe('DbLoadSurveyById Usecase', () => {
 
         await expect(promise).rejects.toThrow()
       })
+    })
 
-      test('Should return a survey on success', async () => {
-        const { sut } = makeSut()
-        const survey = await sut.load('any_id')
+    test('Should return a survey on success', async () => {
+      const { sut } = makeSut()
+      const survey = await sut.load('any_id')
 
-        expect(survey).toEqual(makeFakeSurvey())
-      })
+      expect(survey).toEqual(makeFakeSurvey())
     })
   })
 })
