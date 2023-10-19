@@ -1,5 +1,6 @@
 import { type LoadSurveyByIdRepository, type SurveyModel } from './db-load-survey-by-id-protocols'
 import { DbLoadSurveyById } from './db-load-survey-by-id'
+import MockDate from 'mockdate'
 
 const makeFakeSurvey = (): SurveyModel => {
   return {
@@ -44,6 +45,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadSurveyById Usecase', () => {
+  beforeAll(() => {
+    MockDate.set('1996-06-07')
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   describe('Method load', () => {
     describe('LoadSurveyByIdRepository integration', () => {
       test('Should call loadById with correct id', async () => {
@@ -68,6 +77,13 @@ describe('DbLoadSurveyById Usecase', () => {
         const promise = sut.load('any_id')
 
         await expect(promise).rejects.toThrow()
+      })
+
+      test('Should return a survey on success', async () => {
+        const { sut } = makeSut()
+        const survey = await sut.load('any_id')
+
+        expect(survey).toEqual(makeFakeSurvey())
       })
     })
   })
