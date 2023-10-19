@@ -86,7 +86,7 @@ describe('Survey Result Mongo Repository', () => {
       const sut = makeSut()
       const survey = await makeSurvey()
       const account = await makeAccount()
-      await surveyResultCollection.insertOne({
+      const result = await surveyResultCollection.insertOne({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].text,
@@ -101,7 +101,7 @@ describe('Survey Result Mongo Repository', () => {
       })
 
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
+      expect(surveyResult.id).toEqual(result.ops[0]._id)
       expect(surveyResult.surveyId).toEqual(survey.id)
       expect(surveyResult.accountId).toEqual(account.id)
       expect(surveyResult.answer).toBe(survey.answers[0].text)
