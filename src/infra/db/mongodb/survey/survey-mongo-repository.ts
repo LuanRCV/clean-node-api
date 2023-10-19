@@ -23,7 +23,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, ListSurveysRe
     const survey = await surveyCollection.findOne({ _id: id })
 
     if (survey) {
-      return survey
+      return MongoHelper.mapEntity<SurveyModel>(survey)
     }
 
     return null
