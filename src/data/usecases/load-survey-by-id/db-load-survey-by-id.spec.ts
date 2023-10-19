@@ -45,7 +45,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadSurveyById Usecase', () => {
-  describe('Method loadById', () => {
+  describe('Method load', () => {
     describe('LoadSurveyByIdRepository integration', () => {
       test('Should call loadById with correct id', async () => {
         const { sut, loadSurveyByIdRepositoryStub } = makeSut()
@@ -61,6 +61,14 @@ describe('DbLoadSurveyById Usecase', () => {
         const survey = await sut.load('any_id')
 
         expect(survey).toBeNull()
+      })
+
+      test('Should throw if loadById throws', async () => {
+        const { sut, loadSurveyByIdRepositoryStub } = makeSut()
+        jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+        const promise = sut.load('any_id')
+
+        await expect(promise).rejects.toThrow()
       })
     })
   })
