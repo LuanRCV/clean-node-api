@@ -8,7 +8,7 @@ import {
   type SurveyModel
 } from './save-survey-result-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
-import { MissingParamError, ServerError, SurveyNotFoundError } from '../../../errors'
+import { InvalidParamError, MissingParamError, ServerError, SurveyNotFoundError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import MockDate from 'mockdate'
 
@@ -34,7 +34,7 @@ const makeFakeSurveyResult = (): SurveyResultModel => {
     id: 'any_id',
     surveyId: 'any_survey_id',
     accountId: 'any_account_id',
-    answer: 'any_answer',
+    answer: 'any_text_1',
     date: new Date()
   }
 }
@@ -43,7 +43,7 @@ const makeFakeSaveSurveyResult = (): SaveSurveyResultModel => {
   return {
     surveyId: 'any_survey_id',
     accountId: 'any_account_id',
-    answer: 'any_answer',
+    answer: 'any_text_1',
     date: new Date()
   }
 }
@@ -156,6 +156,20 @@ describe('SaveSurveyResult Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(HttpHelper.forbidden(new SurveyNotFoundError()))
+  })
+
+  test('Should return 403 if an invalid answer is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      params: {
+        surveyId: 'any_survey_id'
+      },
+      body: {
+        answer: 'wrong_answer'
+      }
+    })
+
+    expect(httpResponse).toEqual(HttpHelper.forbidden(new InvalidParamError('answer')))
   })
 
   test('Should return 500 if LoadSurveyById throws', async () => {
