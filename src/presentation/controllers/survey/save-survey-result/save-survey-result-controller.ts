@@ -25,7 +25,7 @@ export class SaveSurveyResultController implements Controller {
       }
 
       const { surveyId } = httpRequest.params
-      const survey = await this.loadSurveyById.loadById(surveyId)
+      const survey = await this.loadSurveyById.load(surveyId)
 
       if (survey) {
         const surveyResult = await this.saveSurveyResult.save(httpRequest.body)

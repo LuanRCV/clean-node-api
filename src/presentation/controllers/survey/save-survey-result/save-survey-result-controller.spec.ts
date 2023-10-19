@@ -60,7 +60,7 @@ const makeValidation = (): Validation => {
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
-    async loadById (id: string): Promise<SurveyModel | null> {
+    async load (id: string): Promise<SurveyModel | null> {
       return await new Promise(resolve => { resolve(makeFakeSurvey()) })
     }
   }
@@ -144,15 +144,15 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should call LoadSurveyById with correct id', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
-    const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
+    const loadSpy = jest.spyOn(loadSurveyByIdStub, 'load')
     await sut.handle(makeFakeRequest())
 
-    expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
+    expect(loadSpy).toHaveBeenCalledWith('any_survey_id')
   })
 
   test('Should return 403 if LoadSurveyById returns null', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
-    jest.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValueOnce(new Promise(resolve => { resolve(null) }))
+    jest.spyOn(loadSurveyByIdStub, 'load').mockReturnValueOnce(new Promise(resolve => { resolve(null) }))
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(HttpHelper.forbidden(new SurveyNotFoundError()))
@@ -160,7 +160,7 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should return 500 if LoadSurveyById throws', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
-    jest.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(loadSurveyByIdStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(HttpHelper.serverError(new ServerError()))
