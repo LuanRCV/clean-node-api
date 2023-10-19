@@ -1,7 +1,6 @@
-import { type SaveSurveyResultRepository } from '@data/protocols/db/survey/save-survey-result-repository'
+import { type SaveSurveyResultRepository, type SurveyResultModel, type SaveSurveyResultModel } from './db-save-survey-result-protocols'
 import { DbSaveSurveyResult } from './db-save-survey-result'
-import { type SurveyResultModel } from '@domain/models/survey-result'
-import { type SaveSurveyResultModel } from '@domain/usecases/save-survey-result'
+import MockDate from 'mockdate'
 
 const makeFakeSaveSurveyResult = (): SaveSurveyResultModel => {
   return {
@@ -48,6 +47,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbSaveSurveyResult Usecase', () => {
+  beforeAll(() => {
+    MockDate.set('1996-06-07')
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   describe('SaveSurveyResultRepository integration', () => {
     test('Should call save with correct values', async () => {
       const { sut, saveSurveyResultRepositoryStub } = makeSut()
