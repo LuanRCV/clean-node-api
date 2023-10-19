@@ -1,4 +1,4 @@
-import { type CredentialModel } from '../models/credential'
+import { type CredentialModel } from '../../models/credential'
 
 export type AuthenticationModel = {
   email: string

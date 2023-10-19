@@ -1,7 +1,7 @@
 import { type AddSurveyRepository } from '@data/protocols/db/survey/add-survey-repository'
-import { type LoadSurveyByIdRepository } from '@data/usecases/load-survey-by-id/db-load-survey-by-id-protocols'
-import { type ListSurveysRepository } from '@data/usecases/list-surveys/db-list-surveys-protocols'
-import { type AddSurveyModel } from '@domain/usecases/add-survey'
+import { type LoadSurveyByIdRepository } from '@data/usecases/survey/load-survey-by-id/db-load-survey-by-id-protocols'
+import { type ListSurveysRepository } from '@data/usecases/survey/list-surveys/db-list-surveys-protocols'
+import { type AddSurveyModel } from '@domain/usecases/survey/add-survey'
 import { type SurveyModel } from '@domain/models/survey'
 import { MongoHelper } from '../helpers/mongo'
 
