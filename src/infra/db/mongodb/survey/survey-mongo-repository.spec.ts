@@ -94,5 +94,24 @@ describe('Survey Mongo Repository', () => {
 
       expect(survey).toBeNull()
     })
+
+    test('Should return a survey on success', async () => {
+      const sut = makeSut()
+      const result = await surveyCollection.insertOne(makeFakeSurveyData())
+      const newSurvey = result.ops[0]
+      const survey = await sut.loadById(newSurvey._id)
+
+      expect(survey).toBeTruthy()
+      expect(survey?.id).toBeTruthy()
+      expect(survey?.question).toBe('any_question')
+      expect(survey?.answers).toBeTruthy()
+      expect(survey?.answers[0]).toEqual({
+        image: 'any_image_1',
+        text: 'any_answer_1'
+      })
+      expect(survey?.answers[1]).toEqual({
+        text: 'any_answer_2'
+      })
+    })
   })
 })
