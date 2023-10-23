@@ -18,7 +18,7 @@ export class SaveSurveyResultController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const validationError = this.validation.validate(httpRequest)
+      const validationError = this.validation.validate(httpRequest.body)
 
       if (validationError) {
         return HttpHelper.badRequest(validationError)
