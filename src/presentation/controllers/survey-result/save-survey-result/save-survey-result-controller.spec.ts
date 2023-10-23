@@ -39,15 +39,6 @@ const makeFakeSurveyResult = (): SurveyResultModel => {
   }
 }
 
-const makeFakeSaveSurveyResult = (): SaveSurveyResultModel => {
-  return {
-    surveyId: 'any_survey_id',
-    accountId: 'any_account_id',
-    answer: 'any_text_1',
-    date: new Date()
-  }
-}
-
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
     validate (input: any): Error | null {
@@ -83,7 +74,10 @@ const makeFakeRequest = (): HttpRequest => {
     params: {
       surveyId: 'any_survey_id'
     },
-    body: makeFakeSaveSurveyResult()
+    body: {
+      answer: 'any_text_1'
+    },
+    accountId: 'any_account_id'
   }
 }
 
@@ -166,7 +160,8 @@ describe('SaveSurveyResult Controller', () => {
       },
       body: {
         answer: 'wrong_answer'
-      }
+      },
+      accountId: 'any_account_id'
     })
 
     expect(httpResponse).toEqual(HttpHelper.forbidden(new InvalidParamError('answer')))
@@ -185,7 +180,12 @@ describe('SaveSurveyResult Controller', () => {
     const saveSpy = jest.spyOn(saveSurveyResultStub, 'save')
     await sut.handle(makeFakeRequest())
 
-    expect(saveSpy).toHaveBeenCalledWith(makeFakeSaveSurveyResult())
+    expect(saveSpy).toHaveBeenCalledWith({
+      surveyId: 'any_survey_id',
+      accountId: 'any_account_id',
+      answer: 'any_text_1',
+      date: new Date()
+    })
   })
 
   test('Should return 500 if SaveSurveyResult throws', async () => {

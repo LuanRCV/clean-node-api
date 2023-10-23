@@ -26,12 +26,18 @@ export class SaveSurveyResultController implements Controller {
 
       const { surveyId } = httpRequest.params
       const { answer } = httpRequest.body
+      const { accountId } = httpRequest as any
       const survey = await this.loadSurveyById.load(surveyId)
 
       if (survey) {
         const answers = survey.answers.map(answer => answer.text)
         if (answers.includes(answer)) {
-          const surveyResult = await this.saveSurveyResult.save(httpRequest.body)
+          const surveyResult = await this.saveSurveyResult.save({
+            accountId,
+            surveyId,
+            answer,
+            date: new Date()
+          })
 
           return HttpHelper.ok(surveyResult)
         } else {
