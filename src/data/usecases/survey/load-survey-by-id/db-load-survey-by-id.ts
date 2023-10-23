@@ -7,11 +7,6 @@ export class DbLoadSurveyById implements LoadSurveyById {
 
   async load (id: string): Promise<SurveyModel | null> {
     const survey = await this.loadSurveyByIdRepository.loadById(id)
-
-    if (survey) {
-      return survey
-    }
-
-    return null
+    return survey
   }
 }
