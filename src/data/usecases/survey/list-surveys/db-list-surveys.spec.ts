@@ -1,6 +1,7 @@
 import { type SurveyModel, type ListSurveysRepository } from './db-list-surveys-protocols'
 import { DbListSurveys } from './db-list-surveys'
 import MockDate from 'mockdate'
+import { throwError } from '@domain/test'
 
 const makeFakeSurvey = (): SurveyModel => {
   return {
@@ -65,7 +66,7 @@ describe('DbListSurveys Usecase', () => {
 
       test('Should throw if list throws', async () => {
         const { sut, listSurveysRepositoryStub } = makeSut()
-        jest.spyOn(listSurveysRepositoryStub, 'list').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+        jest.spyOn(listSurveysRepositoryStub, 'list').mockImplementationOnce(throwError)
         const promise = sut.list()
 
         await expect(promise).rejects.toThrow()

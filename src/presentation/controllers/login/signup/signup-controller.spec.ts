@@ -1,3 +1,4 @@
+import { throwError } from '@domain/test'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { SignUpController } from './signup-controller'
@@ -134,7 +135,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(throwError)
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
@@ -155,7 +156,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError)
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
