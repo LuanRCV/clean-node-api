@@ -1,4 +1,4 @@
-import { throwError } from '@domain/test'
+import { mockAccountModel, throwError } from '@domain/test'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { SignUpController } from './signup-controller'
@@ -17,9 +17,7 @@ const makeValidation = (): Validation => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (account: AddAccountParams): Promise<AccountModel> {
-      const fakeAccount = makeFakeAccount()
-
-      return await new Promise((resolve, reject) => { resolve(fakeAccount) })
+      return await new Promise((resolve, reject) => { resolve(mockAccountModel()) })
     }
   }
 
@@ -39,15 +37,6 @@ const makeAuthentication = (): Authentication => {
 const makeFakeCredential = (): CredentialModel => {
   return {
     accessToken: 'any_token'
-  }
-}
-
-const makeFakeAccount = (): AccountModel => {
-  return {
-    id: 'valid_id',
-    name: 'valid_name',
-    email: 'valid_email@mail.com',
-    password: 'valid_password'
   }
 }
 

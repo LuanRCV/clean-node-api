@@ -7,12 +7,12 @@ import {
   type UpdateAccessTokenRepository
 } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
-import { throwError } from '@domain/test'
+import { mockAccountModel, throwError } from '@domain/test'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel | null> {
-      return await new Promise(resolve => { resolve(makeFakeAccount()) })
+      return await new Promise(resolve => { resolve(mockAccountModel()) })
     }
   }
 
@@ -53,15 +53,6 @@ const makeFakeAuthenticationData = (): AuthenticationParams => {
   return {
     email: 'any_email@mail.com',
     password: 'any_password'
-  }
-}
-
-const makeFakeAccount = (): AccountModel => {
-  return {
-    id: 'any_id',
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'hashed_password'
   }
 }
 
@@ -123,7 +114,7 @@ describe('DbAuthentication Usecase', () => {
         const compareSpy = jest.spyOn(hashComparerStub, 'compare')
         await sut.auth(makeFakeAuthenticationData())
 
-        expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+        expect(compareSpy).toHaveBeenCalledWith('any_password', 'any_password')
       })
 
       test('Should return null if compare returns false', async () => {

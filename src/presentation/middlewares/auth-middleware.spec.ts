@@ -2,20 +2,12 @@ import { AuthMiddleware } from './auth-middleware'
 import { HttpHelper } from '../helpers/http/http-helper'
 import { AccessDeniedError } from '../errors'
 import { type LoadAccountByToken, type HttpRequest, type AccountModel } from './auth-middleware-protocols'
-
-const makeFakeAccount = (): AccountModel => {
-  return {
-    id: 'any_id',
-    name: 'any_name',
-    email: 'any_email',
-    password: 'any_hashed_password'
-  }
-}
+import { mockAccountModel } from '@domain/test'
 
 const makeLoadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load (accessToken: string, role?: string): Promise<AccountModel> {
-      return await new Promise(resolve => { resolve(makeFakeAccount()) })
+      return await new Promise(resolve => { resolve(mockAccountModel()) })
     }
   }
 
