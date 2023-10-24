@@ -1,7 +1,7 @@
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { SignUpController } from './signup-controller'
-import { type Authentication, type AccountModel, type AddAccount, type AddAccountModel, type HttpRequest, type Validation, type AuthenticationModel, type CredentialModel } from './signup-controller-protocols'
+import { type Authentication, type AccountModel, type AddAccount, type AddAccountParams, type HttpRequest, type Validation, type AuthenticationParams, type CredentialModel } from './signup-controller-protocols'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -15,7 +15,7 @@ const makeValidation = (): Validation => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       const fakeAccount = makeFakeAccount()
 
       return await new Promise((resolve, reject) => { resolve(fakeAccount) })
@@ -27,7 +27,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<CredentialModel | null> {
+    async auth (authentication: AuthenticationParams): Promise<CredentialModel | null> {
       return await new Promise(resolve => { resolve(makeFakeCredential()) })
     }
   }

@@ -3,7 +3,7 @@ import {
   type HttpRequest,
   type LoadSurveyById,
   type SaveSurveyResult,
-  type SaveSurveyResultModel,
+  type SaveSurveyResultParams,
   type SurveyResultModel,
   type SurveyModel
 } from './save-survey-result-protocols'
@@ -61,7 +61,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
-    async save (saveSurveyResultData: SaveSurveyResultModel): Promise<SurveyResultModel> {
+    async save (saveSurveyResultData: SaveSurveyResultParams): Promise<SurveyResultModel> {
       return await new Promise(resolve => { resolve(makeFakeSurveyResult()) })
     }
   }

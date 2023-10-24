@@ -1,11 +1,11 @@
 import { type Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { type AddSurveyModel } from '@domain/usecases/survey/add-survey'
+import { type AddSurveyParams } from '@domain/usecases/survey/add-survey'
 
 let surveyCollection: Collection
 
-const makeFakeSurveyData = (): AddSurveyModel => {
+const makeFakeSurveyData = (): AddSurveyParams => {
   return {
     question: 'any_question',
     date: new Date(),

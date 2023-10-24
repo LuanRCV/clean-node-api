@@ -1,6 +1,6 @@
 import {
   type AccountModel,
-  type AuthenticationModel,
+  type AuthenticationParams,
   type HashComparer,
   type LoadAccountByEmailRepository,
   type Encrypter,
@@ -48,7 +48,7 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   return new UpdateAccessTokenRepositoryStub()
 }
 
-const makeFakeAuthenticationData = (): AuthenticationModel => {
+const makeFakeAuthenticationData = (): AuthenticationParams => {
   return {
     email: 'any_email@mail.com',
     password: 'any_password'
