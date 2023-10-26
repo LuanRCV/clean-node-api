@@ -10,13 +10,13 @@ let surveyCollection: Collection
 let surveyResultCollection: Collection
 let accountCollection: Collection
 
-const makeAccount = async (): Promise<AccountModel> => {
+const insertMockedAccount = async (): Promise<AccountModel> => {
   const result = await accountCollection.insertOne(mockAddAccountParams())
 
   return MongoHelper.mapEntity<AccountModel>(result.ops[0])
 }
 
-const makeSurvey = async (): Promise<SurveyModel> => {
+const insertMockedSurvey = async (): Promise<SurveyModel> => {
   const result = await surveyCollection.insertOne(mockAddSurveyParams())
 
   return MongoHelper.mapEntity<SurveyModel>(result.ops[0])
@@ -50,8 +50,8 @@ describe('Survey Result Mongo Repository', () => {
   describe('Method save', () => {
     test('Should add a survey result if it is new', async () => {
       const sut = makeSut()
-      const survey = await makeSurvey()
-      const account = await makeAccount()
+      const survey = await insertMockedSurvey()
+      const account = await insertMockedAccount()
       const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
@@ -69,8 +69,8 @@ describe('Survey Result Mongo Repository', () => {
 
     test('Should update a survey result if it is not new', async () => {
       const sut = makeSut()
-      const survey = await makeSurvey()
-      const account = await makeAccount()
+      const survey = await insertMockedSurvey()
+      const account = await insertMockedAccount()
       const result = await surveyResultCollection.insertOne({
         surveyId: survey.id,
         accountId: account.id,
