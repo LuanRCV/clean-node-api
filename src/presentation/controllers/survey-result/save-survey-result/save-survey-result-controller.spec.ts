@@ -12,16 +12,7 @@ import { InvalidParamError, MissingParamError, ServerError, SurveyNotFoundError 
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import MockDate from 'mockdate'
 import { mockSurveyModel, mockSurveyResultModel, throwError } from '@domain/test'
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | null {
-      return null
-    }
-  }
-
-  return new ValidationStub()
-}
+import { mockValidation } from '@validation/test'
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
@@ -63,7 +54,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = makeValidation()
+  const validationStub = mockValidation()
   const loadSurveyByIdStub = makeLoadSurveyById()
   const saveSurveyResultStub = makeSaveSurveyResult()
   const sut = new SaveSurveyResultController(validationStub, loadSurveyByIdStub, saveSurveyResultStub)

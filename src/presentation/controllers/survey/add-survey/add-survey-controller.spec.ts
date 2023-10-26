@@ -2,16 +2,7 @@ import { type AddSurvey, type HttpRequest, type Validation, type AddSurveyParams
 import { AddSurveyController } from './add-survey-controller'
 import { MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | null {
-      return null
-    }
-  }
-
-  return new ValidationStub()
-}
+import { mockValidation } from '@validation/test'
 
 const makeAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
@@ -48,7 +39,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = makeValidation()
+  const validationStub = mockValidation()
   const addSurveyStub = makeAddSurvey()
   const sut = new AddSurveyController(validationStub, addSurveyStub)
 

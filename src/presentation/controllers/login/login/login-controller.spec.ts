@@ -3,16 +3,7 @@ import { MissingParamError, ServerError } from '../../../errors'
 import { type HttpRequest, type Authentication, type Validation, type AuthenticationParams, type CredentialModel } from './login-controller-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { mockCredentialModel, throwError } from '@domain/test'
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | null {
-      return null
-    }
-  }
-
-  return new ValidationStub()
-}
+import { mockValidation } from '@validation/test'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -41,7 +32,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const authenticationStub = makeAuthentication()
-  const validationStub = makeValidation()
+  const validationStub = mockValidation()
   const sut = new LoginController(authenticationStub, validationStub)
 
   return {
