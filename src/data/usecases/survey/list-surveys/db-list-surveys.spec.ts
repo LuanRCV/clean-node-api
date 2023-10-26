@@ -1,41 +1,16 @@
-import { type SurveyModel, type ListSurveysRepository } from './db-list-surveys-protocols'
+import { type ListSurveysRepository } from './db-list-surveys-protocols'
 import { DbListSurveys } from './db-list-surveys'
 import MockDate from 'mockdate'
-
-const makeFakeSurvey = (): SurveyModel => {
-  return {
-    id: 'any_id',
-    question: 'any_question',
-    date: new Date(),
-    answers: [
-      {
-        image: 'any_image_url_1',
-        text: 'any_text_1'
-      },
-      {
-        text: 'any_text_2'
-      }
-    ]
-  }
-}
-
-const makeListSurveysRepository = (): ListSurveysRepository => {
-  class ListSurveysRepositoryStub implements ListSurveysRepository {
-    async list (): Promise<SurveyModel[]> {
-      return await new Promise(resolve => { resolve([makeFakeSurvey()]) })
-    }
-  }
-
-  return new ListSurveysRepositoryStub()
-}
+import { mockSurveyModel, throwError } from '@domain/test'
+import { mockListSurveysRepository } from '@data/test'
 
 type SutTypes = {
   sut: DbListSurveys
   listSurveysRepositoryStub: ListSurveysRepository
 }
 
-const makeSut = (): SutTypes => {
-  const listSurveysRepositoryStub = makeListSurveysRepository()
+const buildSut = (): SutTypes => {
+  const listSurveysRepositoryStub = mockListSurveysRepository()
   const sut = new DbListSurveys(listSurveysRepositoryStub)
 
   return {
@@ -56,7 +31,7 @@ describe('DbListSurveys Usecase', () => {
   describe('Method list', () => {
     describe('ListSurveysRepository integration', () => {
       test('Should call list', async () => {
-        const { sut, listSurveysRepositoryStub } = makeSut()
+        const { sut, listSurveysRepositoryStub } = buildSut()
         const listSpy = jest.spyOn(listSurveysRepositoryStub, 'list')
         await sut.list()
 
@@ -64,18 +39,18 @@ describe('DbListSurveys Usecase', () => {
       })
 
       test('Should throw if list throws', async () => {
-        const { sut, listSurveysRepositoryStub } = makeSut()
-        jest.spyOn(listSurveysRepositoryStub, 'list').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+        const { sut, listSurveysRepositoryStub } = buildSut()
+        jest.spyOn(listSurveysRepositoryStub, 'list').mockImplementationOnce(throwError)
         const promise = sut.list()
 
         await expect(promise).rejects.toThrow()
       })
 
       test('Should return a list of surveys on success', async () => {
-        const { sut } = makeSut()
+        const { sut } = buildSut()
         const surveys = await sut.list()
 
-        expect(surveys).toEqual([makeFakeSurvey()])
+        expect(surveys).toEqual([mockSurveyModel()])
       })
     })
   })

@@ -1,26 +1,11 @@
 import { type Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { type AddSurveyModel } from '@domain/usecases/survey/add-survey'
+import { mockAddSurveyParams } from '@domain/test'
 
 let surveyCollection: Collection
 
-const makeFakeSurveyData = (): AddSurveyModel => {
-  return {
-    question: 'any_question',
-    date: new Date(),
-    answers: [
-      {
-        image: 'any_image_1',
-        text: 'any_answer_1'
-      },
-      {
-        text: 'any_answer_2'
-      }
-    ]
-  }
-}
-const makeSut = (): SurveyMongoRepository => {
+const buildSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
@@ -40,8 +25,8 @@ describe('Survey Mongo Repository', () => {
 
   describe('Method add', () => {
     test('Should add a survey on success', async () => {
-      const sut = makeSut()
-      await sut.add(makeFakeSurveyData())
+      const sut = buildSut()
+      await sut.add(mockAddSurveyParams())
       const survey = await surveyCollection.findOne({ question: 'any_question' })
 
       expect(survey).toBeTruthy()
@@ -49,18 +34,18 @@ describe('Survey Mongo Repository', () => {
       expect(survey.question).toBe('any_question')
       expect(survey.answers).toBeTruthy()
       expect(survey.answers[0]).toEqual({
-        image: 'any_image_1',
-        text: 'any_answer_1'
+        image: 'any_image_url_1',
+        text: 'any_text_1'
       })
       expect(survey.answers[1]).toEqual({
-        text: 'any_answer_2'
+        text: 'any_text_2'
       })
     })
   })
 
   describe('Method list', () => {
     test('Should load an empty list', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const surveys = await sut.list()
 
       expect(surveys).toBeTruthy()
@@ -68,8 +53,8 @@ describe('Survey Mongo Repository', () => {
     })
 
     test('Should list all surveys on success', async () => {
-      const sut = makeSut()
-      await surveyCollection.insert(makeFakeSurveyData())
+      const sut = buildSut()
+      await surveyCollection.insert(mockAddSurveyParams())
       const surveys = await sut.list()
 
       expect(surveys).toBeTruthy()
@@ -78,26 +63,26 @@ describe('Survey Mongo Repository', () => {
       expect(surveys[0].question).toBe('any_question')
       expect(surveys[0].answers).toBeTruthy()
       expect(surveys[0].answers[0]).toEqual({
-        image: 'any_image_1',
-        text: 'any_answer_1'
+        image: 'any_image_url_1',
+        text: 'any_text_1'
       })
       expect(surveys[0].answers[1]).toEqual({
-        text: 'any_answer_2'
+        text: 'any_text_2'
       })
     })
   })
 
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const survey = await sut.loadById('any_id')
 
       expect(survey).toBeNull()
     })
 
     test('Should return a survey on success', async () => {
-      const sut = makeSut()
-      const result = await surveyCollection.insertOne(makeFakeSurveyData())
+      const sut = buildSut()
+      const result = await surveyCollection.insertOne(mockAddSurveyParams())
       const newSurvey = result.ops[0]
       const survey = await sut.loadById(newSurvey._id)
 
@@ -106,11 +91,11 @@ describe('Survey Mongo Repository', () => {
       expect(survey?.question).toBe('any_question')
       expect(survey?.answers).toBeTruthy()
       expect(survey?.answers[0]).toEqual({
-        image: 'any_image_1',
-        text: 'any_answer_1'
+        image: 'any_image_url_1',
+        text: 'any_text_1'
       })
       expect(survey?.answers[1]).toEqual({
-        text: 'any_answer_2'
+        text: 'any_text_2'
       })
     })
   })
