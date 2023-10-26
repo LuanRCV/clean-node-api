@@ -8,6 +8,7 @@ import {
 } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
 import { mockAccountModel, throwError } from '@domain/test'
+import { mockEncrypter, mockHashComparer } from '@data/test'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
@@ -17,26 +18,6 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   }
 
   return new LoadAccountByEmailRepositoryStub()
-}
-
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await new Promise(resolve => { resolve(true) })
-    }
-  }
-
-  return new HashComparerStub()
-}
-
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return await new Promise(resolve => { resolve('any_access_token') })
-    }
-  }
-
-  return new EncrypterStub()
 }
 
 const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
@@ -66,8 +47,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const hashComparerStub = makeHashComparer()
-  const encrypterStub = makeEncrypter()
+  const hashComparerStub = mockHashComparer()
+  const encrypterStub = mockEncrypter()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub)
 
