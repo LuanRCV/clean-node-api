@@ -22,7 +22,7 @@ const insertMockedSurvey = async (): Promise<SurveyModel> => {
   return MongoHelper.mapEntity<SurveyModel>(result.ops[0])
 }
 
-const makeSut = (): SurveyResultMongoRepository => {
+const buildSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
 }
 
@@ -49,7 +49,7 @@ describe('Survey Result Mongo Repository', () => {
 
   describe('Method save', () => {
     test('Should add a survey result if it is new', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const survey = await insertMockedSurvey()
       const account = await insertMockedAccount()
       const surveyResult = await sut.save({
@@ -68,7 +68,7 @@ describe('Survey Result Mongo Repository', () => {
     })
 
     test('Should update a survey result if it is not new', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const survey = await insertMockedSurvey()
       const account = await insertMockedAccount()
       const result = await surveyResultCollection.insertOne({

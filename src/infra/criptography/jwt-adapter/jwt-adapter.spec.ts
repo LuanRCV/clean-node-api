@@ -14,7 +14,7 @@ jest.mock('jsonwebtoken', () => ({
 }))
 
 const jwtSecret = 'secret'
-const makeSut = (): JwtAdapter => {
+const buildSut = (): JwtAdapter => {
   return new JwtAdapter(jwtSecret)
 }
 
@@ -22,7 +22,7 @@ describe('Jwt Adapter', () => {
   describe('Method encrypt', () => {
     describe('jsonwebtoken integration', () => {
       test('Should call sign with correct values', async () => {
-        const sut = makeSut()
+        const sut = buildSut()
         const signSpy = jest.spyOn(jwt, 'sign')
         await sut.encrypt('any_id')
 
@@ -30,7 +30,7 @@ describe('Jwt Adapter', () => {
       })
 
       test('Should throw if sign throws', async () => {
-        const sut = makeSut()
+        const sut = buildSut()
         type JwtSignSpy = (payload: string | Buffer | object, secretOrPrivateKey: Secret, options?: SignOptions) => string
         const jwtSignSpy = jest.spyOn(jwt, 'sign') as unknown as jest.MockedFunction<JwtSignSpy>
         jwtSignSpy.mockImplementationOnce((payload: string | Buffer | object, secretOrPrivateKey: Secret, options?: SignOptions) => { throw new Error() })
@@ -41,7 +41,7 @@ describe('Jwt Adapter', () => {
     })
 
     test('Should return a token on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const token = await sut.encrypt('any_id')
 
       expect(token).toBe('any_token')
@@ -51,7 +51,7 @@ describe('Jwt Adapter', () => {
   describe('Method decrypt', () => {
     describe('jsonwebtoken integration', () => {
       test('Should call verify with correct values', async () => {
-        const sut = makeSut()
+        const sut = buildSut()
         const verifySpy = jest.spyOn(jwt, 'verify')
         await sut.decrypt('any_token')
 
@@ -59,7 +59,7 @@ describe('Jwt Adapter', () => {
       })
 
       test('Should throw if verify throws', async () => {
-        const sut = makeSut()
+        const sut = buildSut()
         type JwtVerifySpy = (token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }) => string
         const jwtSignSpy = jest.spyOn(jwt, 'verify') as unknown as jest.MockedFunction<JwtVerifySpy>
         jwtSignSpy.mockImplementationOnce((token: string, secretOrPublicKey: Secret, options: VerifyOptions & { complete: true }) => { throw new Error() })
@@ -70,7 +70,7 @@ describe('Jwt Adapter', () => {
     })
 
     test('Should return a value on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const value = await sut.decrypt('any_token')
 
       expect(value).toBe('any_id')

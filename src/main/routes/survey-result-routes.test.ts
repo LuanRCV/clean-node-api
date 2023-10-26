@@ -4,18 +4,21 @@ import { MongoHelper } from '@infra/db/mongodb/helpers/mongo'
 import { type Collection } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import env from '../config/env'
+import { mockAddAccountParams } from '@domain/test'
+import { type AccountModel } from '@domain/models/account'
 
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
-  const result = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_mail@mail.com',
-    password: 'any_password'
-  })
+const insertMockedAccount = async (): Promise<AccountModel> => {
+  const result = await accountCollection.insertOne(mockAddAccountParams())
 
-  const id = result.ops[0]._id
+  return MongoHelper.mapEntity<AccountModel>(result.ops[0])
+}
+
+const updateAccessToken = async (): Promise<string> => {
+  const account = await insertMockedAccount()
+  const { id } = account
   const accessToken = jwt.sign({ id }, env.jwtSecret)
   await accountCollection.updateOne({
     _id: id
@@ -56,7 +59,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 200 on save survey result with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await updateAccessToken()
       const res = await surveyCollection.insertOne({
         question: 'any_question',
         date: new Date(),

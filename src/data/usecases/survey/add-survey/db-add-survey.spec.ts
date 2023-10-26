@@ -8,7 +8,7 @@ type SutTypes = {
   addSurveyRepositoryStub: AddSurveyRepository
 }
 
-const makeSut = (): SutTypes => {
+const buildSut = (): SutTypes => {
   const addSurveyRepositoryStub = mockAddSurveyRepository()
   const sut = new DbAddSurvey(addSurveyRepositoryStub)
 
@@ -22,7 +22,7 @@ describe('DbAddSurvey Usecase', () => {
   describe('Method add', () => {
     describe('AddSurveyRepository integration', () => {
       test('Should call add with correct values', async () => {
-        const { sut, addSurveyRepositoryStub } = makeSut()
+        const { sut, addSurveyRepositoryStub } = buildSut()
         const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
         const surveyData = mockAddSurveyParams()
         await sut.add(surveyData)
@@ -31,7 +31,7 @@ describe('DbAddSurvey Usecase', () => {
       })
 
       test('Should throw if add throws', async () => {
-        const { sut, addSurveyRepositoryStub } = makeSut()
+        const { sut, addSurveyRepositoryStub } = buildSut()
         jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(throwError)
         const promise = sut.add(mockAddSurveyParams())
 

@@ -5,7 +5,7 @@ import { mockAddAccountParams } from '@domain/test'
 
 let accountCollection: Collection
 
-const makeSut = (): AccountMongoRepository => {
+const buildSut = (): AccountMongoRepository => {
   return new AccountMongoRepository()
 }
 
@@ -25,7 +25,7 @@ describe('Account Mongo Repository', () => {
 
   describe('Method add', () => {
     test('Should return an account on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const account = await sut.add(mockAddAccountParams())
 
       expect(account).toBeTruthy()
@@ -38,14 +38,14 @@ describe('Account Mongo Repository', () => {
 
   describe('Method loadByEmail', () => {
     test('Should return null on fail', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const account = await sut.loadByEmail('any_email@mail.com')
 
       expect(account).toBeNull()
     })
 
     test('Should return an account on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       await accountCollection.insertOne(mockAddAccountParams())
       const account = await sut.loadByEmail('any_email@mail.com')
 
@@ -59,14 +59,14 @@ describe('Account Mongo Repository', () => {
 
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const account = await sut.loadById('any_id')
 
       expect(account).toBeNull()
     })
 
     test('Should return an account without role with success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await accountCollection.insertOne(mockAddAccountParams())
       const newAccount = result.ops[0]
       const account = await sut.loadById(newAccount._id)
@@ -79,7 +79,7 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return null with invalid role', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await accountCollection.insertOne(mockAddAccountParams())
       const newAccount = result.ops[0]
       const account = await sut.loadById(newAccount._id, 'admin')
@@ -88,7 +88,7 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return an account with admin role with success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await accountCollection.insertOne(Object.assign({}, mockAddAccountParams(), { role: 'admin' }))
       const newAccount = result.ops[0]
       const account = await sut.loadById(newAccount._id, 'admin')
@@ -102,7 +102,7 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return an account if user is admin', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await accountCollection.insertOne(Object.assign({}, mockAddAccountParams(), { role: 'admin' }))
       const newAccount = result.ops[0]
       const account = await sut.loadById(newAccount._id)
@@ -118,7 +118,7 @@ describe('Account Mongo Repository', () => {
 
   describe('Method updateAccessToken', () => {
     test('Should update the account accessToken on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await accountCollection.insertOne(mockAddAccountParams())
 
       let account = result.ops[0]

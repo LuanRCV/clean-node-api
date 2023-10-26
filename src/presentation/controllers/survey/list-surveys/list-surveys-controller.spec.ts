@@ -11,7 +11,7 @@ type SutTypes = {
   listSurveysStub: ListSurveys
 }
 
-const makeSut = (): SutTypes => {
+const buildSut = (): SutTypes => {
   const listSurveysStub = mockListSurveys()
   const sut = new ListSurveysController(listSurveysStub)
 
@@ -31,7 +31,7 @@ describe('ListSurveys Controller', () => {
   })
 
   test('Should call ListSurveys', async () => {
-    const { sut, listSurveysStub } = makeSut()
+    const { sut, listSurveysStub } = buildSut()
     const listSpy = jest.spyOn(listSurveysStub, 'list')
     await sut.handle({})
 
@@ -39,7 +39,7 @@ describe('ListSurveys Controller', () => {
   })
 
   test('Should return 500 if ListSurveys throws', async () => {
-    const { sut, listSurveysStub } = makeSut()
+    const { sut, listSurveysStub } = buildSut()
     jest.spyOn(listSurveysStub, 'list').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({})
 
@@ -47,7 +47,7 @@ describe('ListSurveys Controller', () => {
   })
 
   test('Should return 204 if ListSurveys returns empty', async () => {
-    const { sut, listSurveysStub } = makeSut()
+    const { sut, listSurveysStub } = buildSut()
     jest.spyOn(listSurveysStub, 'list').mockReturnValueOnce(new Promise((resolve, reject) => { resolve([]) }))
     const httpResponse = await sut.handle({})
 
@@ -55,7 +55,7 @@ describe('ListSurveys Controller', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut } = makeSut()
+    const { sut } = buildSut()
     const httpResponse = await sut.handle({})
 
     expect(httpResponse).toEqual(HttpHelper.ok([mockSurveyModel()]))

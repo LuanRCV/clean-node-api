@@ -5,7 +5,7 @@ import { mockAddSurveyParams } from '@domain/test'
 
 let surveyCollection: Collection
 
-const makeSut = (): SurveyMongoRepository => {
+const buildSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
@@ -25,7 +25,7 @@ describe('Survey Mongo Repository', () => {
 
   describe('Method add', () => {
     test('Should add a survey on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       await sut.add(mockAddSurveyParams())
       const survey = await surveyCollection.findOne({ question: 'any_question' })
 
@@ -45,7 +45,7 @@ describe('Survey Mongo Repository', () => {
 
   describe('Method list', () => {
     test('Should load an empty list', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const surveys = await sut.list()
 
       expect(surveys).toBeTruthy()
@@ -53,7 +53,7 @@ describe('Survey Mongo Repository', () => {
     })
 
     test('Should list all surveys on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       await surveyCollection.insert(mockAddSurveyParams())
       const surveys = await sut.list()
 
@@ -74,14 +74,14 @@ describe('Survey Mongo Repository', () => {
 
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const survey = await sut.loadById('any_id')
 
       expect(survey).toBeNull()
     })
 
     test('Should return a survey on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       const result = await surveyCollection.insertOne(mockAddSurveyParams())
       const newSurvey = result.ops[0]
       const survey = await sut.loadById(newSurvey._id)

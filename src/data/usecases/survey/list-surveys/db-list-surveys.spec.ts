@@ -9,7 +9,7 @@ type SutTypes = {
   listSurveysRepositoryStub: ListSurveysRepository
 }
 
-const makeSut = (): SutTypes => {
+const buildSut = (): SutTypes => {
   const listSurveysRepositoryStub = mockListSurveysRepository()
   const sut = new DbListSurveys(listSurveysRepositoryStub)
 
@@ -31,7 +31,7 @@ describe('DbListSurveys Usecase', () => {
   describe('Method list', () => {
     describe('ListSurveysRepository integration', () => {
       test('Should call list', async () => {
-        const { sut, listSurveysRepositoryStub } = makeSut()
+        const { sut, listSurveysRepositoryStub } = buildSut()
         const listSpy = jest.spyOn(listSurveysRepositoryStub, 'list')
         await sut.list()
 
@@ -39,7 +39,7 @@ describe('DbListSurveys Usecase', () => {
       })
 
       test('Should throw if list throws', async () => {
-        const { sut, listSurveysRepositoryStub } = makeSut()
+        const { sut, listSurveysRepositoryStub } = buildSut()
         jest.spyOn(listSurveysRepositoryStub, 'list').mockImplementationOnce(throwError)
         const promise = sut.list()
 
@@ -47,7 +47,7 @@ describe('DbListSurveys Usecase', () => {
       })
 
       test('Should return a list of surveys on success', async () => {
-        const { sut } = makeSut()
+        const { sut } = buildSut()
         const surveys = await sut.list()
 
         expect(surveys).toEqual([mockSurveyModel()])

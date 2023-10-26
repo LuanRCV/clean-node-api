@@ -4,7 +4,7 @@ import { LogMongoRepository } from './log-mongo-repository'
 
 let errorCollection: Collection
 
-const makeSut = (): LogMongoRepository => {
+const buildSut = (): LogMongoRepository => {
   return new LogMongoRepository()
 }
 
@@ -24,7 +24,7 @@ describe('Log Mongo Repository', () => {
 
   describe('Method logError', () => {
     test('Should create an error on success', async () => {
-      const sut = makeSut()
+      const sut = buildSut()
       await sut.logError('any_error')
       const count = await errorCollection.countDocuments()
 
