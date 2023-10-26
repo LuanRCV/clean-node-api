@@ -4,17 +4,13 @@ import { MongoHelper } from '@infra/db/mongodb/helpers/mongo'
 import { type Collection } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import env from '../config/env'
+import { mockAddAccountParams } from '@domain/test'
 
 let surveyCollection: Collection
 let accountCollection: Collection
 
 const makeAccessToken = async (): Promise<string> => {
-  const result = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_mail@mail.com',
-    password: 'any_password',
-    role: 'admin'
-  })
+  const result = await accountCollection.insertOne(Object.assign({}, mockAddAccountParams(), { role: 'admin' }))
 
   const id = result.ops[0]._id
   const accessToken = jwt.sign({ id }, env.jwtSecret)
