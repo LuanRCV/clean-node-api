@@ -1,29 +1,9 @@
-import { mockAccountModel, mockCredentialModel, throwError } from '@domain/test'
+import { mockCredentialModel, throwError } from '@domain/test'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { SignUpController } from './signup-controller'
-import { type Authentication, type AccountModel, type AddAccount, type AddAccountParams, type HttpRequest, type Validation, type AuthenticationParams, type CredentialModel } from './signup-controller-protocols'
-import { mockValidation } from '@validation/test'
-
-const makeAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      return await new Promise((resolve, reject) => { resolve(mockAccountModel()) })
-    }
-  }
-
-  return new AddAccountStub()
-}
-
-const makeAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<CredentialModel | null> {
-      return await new Promise(resolve => { resolve(mockCredentialModel()) })
-    }
-  }
-
-  return new AuthenticationStub()
-}
+import { type Authentication, type AddAccount, type HttpRequest, type Validation } from './signup-controller-protocols'
+import { mockValidation, mockAddAccount, mockAuthentication } from '@presentation/test'
 
 const makeFakeRequest = (): HttpRequest => {
   return {
@@ -44,9 +24,9 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const addAccountStub = makeAddAccount()
+  const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
-  const authenticationStub = makeAuthentication()
+  const authenticationStub = mockAuthentication()
   const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
 
   return {

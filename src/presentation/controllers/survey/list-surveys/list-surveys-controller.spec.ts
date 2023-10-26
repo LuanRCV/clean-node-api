@@ -1,19 +1,10 @@
-import { type SurveyModel, type ListSurveys } from './list-surveys-controller-protocols'
+import { type ListSurveys } from './list-surveys-controller-protocols'
 import { ListSurveysController } from './list-surveys-controller'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors'
 import MockDate from 'mockdate'
 import { mockSurveyModel, throwError } from '@domain/test'
-
-const makeListSurveys = (): ListSurveys => {
-  class ListSurveysStub implements ListSurveys {
-    async list (): Promise<SurveyModel[]> {
-      return await new Promise(resolve => { resolve([mockSurveyModel()]) })
-    }
-  }
-
-  return new ListSurveysStub()
-}
+import { mockListSurveys } from '@presentation/test'
 
 type SutTypes = {
   sut: ListSurveysController
@@ -21,7 +12,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const listSurveysStub = makeListSurveys()
+  const listSurveysStub = mockListSurveys()
   const sut = new ListSurveysController(listSurveysStub)
 
   return {

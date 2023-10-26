@@ -2,37 +2,14 @@ import {
   type Validation,
   type HttpRequest,
   type LoadSurveyById,
-  type SaveSurveyResult,
-  type SaveSurveyResultParams,
-  type SurveyResultModel,
-  type SurveyModel
-} from './save-survey-result-protocols'
+  type SaveSurveyResult
+} from './save-survey-result-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { InvalidParamError, MissingParamError, ServerError, SurveyNotFoundError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import MockDate from 'mockdate'
-import { mockSurveyModel, mockSurveyResultModel, throwError } from '@domain/test'
-import { mockValidation } from '@validation/test'
-
-const makeLoadSurveyById = (): LoadSurveyById => {
-  class LoadSurveyByIdStub implements LoadSurveyById {
-    async load (id: string): Promise<SurveyModel | null> {
-      return await new Promise(resolve => { resolve(mockSurveyModel()) })
-    }
-  }
-
-  return new LoadSurveyByIdStub()
-}
-
-const makeSaveSurveyResult = (): SaveSurveyResult => {
-  class SaveSurveyResultStub implements SaveSurveyResult {
-    async save (saveSurveyResultData: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return await new Promise(resolve => { resolve(mockSurveyResultModel()) })
-    }
-  }
-
-  return new SaveSurveyResultStub()
-}
+import { mockSurveyResultModel, throwError } from '@domain/test'
+import { mockLoadSurveyById, mockSaveSurveyResult, mockValidation } from '@presentation/test'
 
 const makeFakeRequest = (): HttpRequest => {
   return {
@@ -55,8 +32,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const loadSurveyByIdStub = makeLoadSurveyById()
-  const saveSurveyResultStub = makeSaveSurveyResult()
+  const loadSurveyByIdStub = mockLoadSurveyById()
+  const saveSurveyResultStub = mockSaveSurveyResult()
   const sut = new SaveSurveyResultController(validationStub, loadSurveyByIdStub, saveSurveyResultStub)
 
   return {

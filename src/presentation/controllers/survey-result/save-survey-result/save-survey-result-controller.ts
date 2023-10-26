@@ -5,7 +5,7 @@ import {
   type Validation,
   type LoadSurveyById,
   type SaveSurveyResult
-} from './save-survey-result-protocols'
+} from './save-survey-result-controller-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { InvalidParamError, SurveyNotFoundError } from '../../../errors'
 
