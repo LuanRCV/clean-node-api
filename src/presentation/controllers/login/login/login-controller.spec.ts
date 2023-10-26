@@ -2,7 +2,7 @@ import { LoginController } from './login-controller'
 import { MissingParamError, ServerError } from '../../../errors'
 import { type HttpRequest, type Authentication, type Validation, type AuthenticationParams, type CredentialModel } from './login-controller-protocols'
 import { HttpHelper } from '../../../helpers/http/http-helper'
-import { throwError } from '@domain/test'
+import { mockCredentialModel, throwError } from '@domain/test'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -17,7 +17,7 @@ const makeValidation = (): Validation => {
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: AuthenticationParams): Promise<CredentialModel | null> {
-      return await new Promise(resolve => { resolve(makeFakeCredential()) })
+      return await new Promise(resolve => { resolve(mockCredentialModel()) })
     }
   }
 
@@ -30,12 +30,6 @@ const makeFakeRequest = (): HttpRequest => {
       email: 'any_email@mail.com',
       password: 'any_password'
     }
-  }
-}
-
-const makeFakeCredential = (): CredentialModel => {
-  return {
-    accessToken: 'any_token'
   }
 }
 
@@ -93,7 +87,7 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeCredential()))
+    expect(httpResponse).toEqual(HttpHelper.ok(mockCredentialModel()))
   })
 
   test('Should call Validation with correct value', async () => {

@@ -1,4 +1,4 @@
-import { mockAccountModel, throwError } from '@domain/test'
+import { mockAccountModel, mockCredentialModel, throwError } from '@domain/test'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { SignUpController } from './signup-controller'
@@ -27,17 +27,11 @@ const makeAddAccount = (): AddAccount => {
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: AuthenticationParams): Promise<CredentialModel | null> {
-      return await new Promise(resolve => { resolve(makeFakeCredential()) })
+      return await new Promise(resolve => { resolve(mockCredentialModel()) })
     }
   }
 
   return new AuthenticationStub()
-}
-
-const makeFakeCredential = (): CredentialModel => {
-  return {
-    accessToken: 'any_token'
-  }
 }
 
 const makeFakeRequest = (): HttpRequest => {
@@ -157,6 +151,6 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeCredential()))
+    expect(httpResponse).toEqual(HttpHelper.ok(mockCredentialModel()))
   })
 })
