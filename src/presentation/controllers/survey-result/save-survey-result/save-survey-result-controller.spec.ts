@@ -11,17 +11,7 @@ import { SaveSurveyResultController } from './save-survey-result-controller'
 import { InvalidParamError, MissingParamError, ServerError, SurveyNotFoundError } from '../../../errors'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import MockDate from 'mockdate'
-import { mockSurveyModel, throwError } from '@domain/test'
-
-const makeFakeSurveyResult = (): SurveyResultModel => {
-  return {
-    id: 'any_id',
-    surveyId: 'any_survey_id',
-    accountId: 'any_account_id',
-    answer: 'any_text_1',
-    date: new Date()
-  }
-}
+import { mockSurveyModel, mockSurveyResultModel, throwError } from '@domain/test'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -46,7 +36,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
     async save (saveSurveyResultData: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return await new Promise(resolve => { resolve(makeFakeSurveyResult()) })
+      return await new Promise(resolve => { resolve(mockSurveyResultModel()) })
     }
   }
 
@@ -184,6 +174,6 @@ describe('SaveSurveyResult Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
 
-    expect(httpResponse).toEqual(HttpHelper.ok(makeFakeSurveyResult()))
+    expect(httpResponse).toEqual(HttpHelper.ok(mockSurveyResultModel()))
   })
 })
