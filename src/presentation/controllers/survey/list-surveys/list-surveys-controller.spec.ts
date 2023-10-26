@@ -3,29 +3,12 @@ import { ListSurveysController } from './list-surveys-controller'
 import { HttpHelper } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors'
 import MockDate from 'mockdate'
-import { throwError } from '@domain/test'
-
-const makeFakeSurvey = (): SurveyModel => {
-  return {
-    id: 'any_id',
-    question: 'any_question',
-    date: new Date(),
-    answers: [
-      {
-        image: 'any_image_url_1',
-        text: 'any_text_1'
-      },
-      {
-        text: 'any_text_2'
-      }
-    ]
-  }
-}
+import { mockSurveyModel, throwError } from '@domain/test'
 
 const makeListSurveys = (): ListSurveys => {
   class ListSurveysStub implements ListSurveys {
     async list (): Promise<SurveyModel[]> {
-      return await new Promise(resolve => { resolve([makeFakeSurvey()]) })
+      return await new Promise(resolve => { resolve([mockSurveyModel()]) })
     }
   }
 
@@ -84,6 +67,6 @@ describe('ListSurveys Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
 
-    expect(httpResponse).toEqual(HttpHelper.ok([makeFakeSurvey()]))
+    expect(httpResponse).toEqual(HttpHelper.ok([mockSurveyModel()]))
   })
 })

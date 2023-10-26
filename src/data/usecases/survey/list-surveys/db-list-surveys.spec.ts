@@ -1,34 +1,8 @@
-import { type SurveyModel, type ListSurveysRepository } from './db-list-surveys-protocols'
+import { type ListSurveysRepository } from './db-list-surveys-protocols'
 import { DbListSurveys } from './db-list-surveys'
 import MockDate from 'mockdate'
-import { throwError } from '@domain/test'
-
-const makeFakeSurvey = (): SurveyModel => {
-  return {
-    id: 'any_id',
-    question: 'any_question',
-    date: new Date(),
-    answers: [
-      {
-        image: 'any_image_url_1',
-        text: 'any_text_1'
-      },
-      {
-        text: 'any_text_2'
-      }
-    ]
-  }
-}
-
-const makeListSurveysRepository = (): ListSurveysRepository => {
-  class ListSurveysRepositoryStub implements ListSurveysRepository {
-    async list (): Promise<SurveyModel[]> {
-      return await new Promise(resolve => { resolve([makeFakeSurvey()]) })
-    }
-  }
-
-  return new ListSurveysRepositoryStub()
-}
+import { mockSurveyModel, throwError } from '@domain/test'
+import { mockListSurveysRepository } from '@data/test'
 
 type SutTypes = {
   sut: DbListSurveys
@@ -36,7 +10,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const listSurveysRepositoryStub = makeListSurveysRepository()
+  const listSurveysRepositoryStub = mockListSurveysRepository()
   const sut = new DbListSurveys(listSurveysRepositoryStub)
 
   return {
@@ -76,7 +50,7 @@ describe('DbListSurveys Usecase', () => {
         const { sut } = makeSut()
         const surveys = await sut.list()
 
-        expect(surveys).toEqual([makeFakeSurvey()])
+        expect(surveys).toEqual([mockSurveyModel()])
       })
     })
   })
