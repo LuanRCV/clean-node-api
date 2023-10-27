@@ -1,6 +1,6 @@
-import { loginPath } from './paths'
-import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
-import { badRequestComponent, notFoundComponent, serverErrorComponent, unauthorizedComponent } from './components'
+import { loginPath, surveyPath } from './paths'
+import { accessTokenSchema, accountSchema, errorSchema, loginParamsSchema, surveyAnswerSchema, surveySchema, surveysSchema } from './schemas'
+import { badRequestComponent, forbiddenComponent, notFoundComponent, serverErrorComponent, unauthorizedComponent } from './components'
 
 export default {
   openapi: '3.0.0',
@@ -30,17 +30,25 @@ export default {
     }
   ],
   paths: {
-    '/login': loginPath
+    '/login': loginPath,
+    '/surveys': surveyPath
   },
   schemas: {
     account: accountSchema,
     loginParams: loginParamsSchema,
-    error: errorSchema
+    error: errorSchema,
+    surveys: surveysSchema,
+    survey: surveySchema,
+    surveyAnswer: surveyAnswerSchema
   },
   components: {
+    securitySchemes: {
+      accessToken: accessTokenSchema
+    },
     badRequest: badRequestComponent,
     unauthorized: unauthorizedComponent,
     serverError: serverErrorComponent,
-    notFound: notFoundComponent
+    notFound: notFoundComponent,
+    forbidden: forbiddenComponent
   }
 }
