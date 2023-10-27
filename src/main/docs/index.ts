@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths'
+import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
+import { badRequestComponent, notFoundComponent, serverErrorComponent, unauthorizedComponent } from './components'
 
 export default {
   openapi: '3.0.0',
@@ -8,6 +8,10 @@ export default {
     title: 'Surveys API',
     description: 'API to manage Surveys and Accounts',
     version: '1.0.0'
+  },
+  license: {
+    name: 'ISC',
+    url: 'https://opensource.org/license/isc-license-txt/'
   },
   servers: [
     {
@@ -30,6 +34,13 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest: badRequestComponent,
+    unauthorized: unauthorizedComponent,
+    serverError: serverErrorComponent,
+    notFound: notFoundComponent
   }
 }
