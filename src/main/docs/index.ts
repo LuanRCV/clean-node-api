@@ -30,7 +30,7 @@ export default {
     '/login': loginPath,
     '/signup': signupPath,
     '/surveys': surveyPath,
-    '/surveys/{surveyId}/result': surveysResultPath
+    '/surveys/{surveyId}/results': surveysResultPath
   },
   schemas: {
     loginParams: loginParamsSchema,

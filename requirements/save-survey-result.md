@@ -2,7 +2,7 @@
 
 > ## Success case
 
-1. ✅ Receive a **PUT** on **/api/surveys/{survey_id}/result**
+1. ✅ Receive a **PUT** on **/api/surveys/{survey_id}/results**
 2. ✅ Check if requisition was done by an **user**
 3. ✅ Check for required fields (**survey_id**, **answer**)
 4. ✅ Check if **answer** is valid
