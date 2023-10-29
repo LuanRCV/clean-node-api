@@ -24,14 +24,8 @@ export class MongoHelper {
     return this.client.db().collection(name)
   }
 
-  static mapObjectId (id: string): ObjectId | null {
-    const isValidId = ObjectId.isValid(id)
-
-    if (isValidId) {
-      return new ObjectId(id)
-    }
-
-    return null
+  static mapObjectId (id: string): ObjectId {
+    return new ObjectId(id)
   }
 
   static mapEntity<T> (entity: any): T {

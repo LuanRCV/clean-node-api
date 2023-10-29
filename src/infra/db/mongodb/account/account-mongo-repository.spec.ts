@@ -1,4 +1,4 @@
-import { type Collection } from 'mongodb'
+import { type Collection, ObjectId } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { mockAddAccountParams } from '@domain/test'
@@ -60,7 +60,7 @@ describe('Account Mongo Repository', () => {
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
       const sut = buildSut()
-      const account = await sut.loadById('any_id')
+      const account = await sut.loadById(new ObjectId().toString())
 
       expect(account).toBeNull()
     })

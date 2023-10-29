@@ -1,4 +1,4 @@
-import { type Collection } from 'mongodb'
+import { type Collection, ObjectId } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { mockAddSurveyParams } from '@domain/test'
@@ -75,7 +75,7 @@ describe('Survey Mongo Repository', () => {
   describe('Method loadById', () => {
     test('Should return null on fail', async () => {
       const sut = buildSut()
-      const survey = await sut.loadById('any_id')
+      const survey = await sut.loadById(new ObjectId().toString())
 
       expect(survey).toBeNull()
     })
