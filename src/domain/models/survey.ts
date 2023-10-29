@@ -2,10 +2,10 @@ export type SurveyModel = {
   id: string
   question: string
   date: Date
-  answers: SurveyAnswer[]
+  answers: SurveyAnswerModel[]
 }
 
-export type SurveyAnswer = {
+export type SurveyAnswerModel = {
   image?: string
   text: string
 }
