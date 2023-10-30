@@ -3,7 +3,7 @@ import { type LoadSurveyByIdRepository } from '@data/usecases/survey/load-survey
 import { type ListSurveysRepository } from '@data/usecases/survey/list-surveys/db-list-surveys-protocols'
 import { type AddSurveyParams } from '@domain/usecases/survey/add-survey'
 import { type SurveyModel } from '@domain/models/survey'
-import { MongoHelper } from '../helpers/mongo'
+import { MongoHelper } from '../helpers'
 
 export class SurveyMongoRepository implements AddSurveyRepository, ListSurveysRepository, LoadSurveyByIdRepository {
   async add (surveyData: AddSurveyParams): Promise<void> {

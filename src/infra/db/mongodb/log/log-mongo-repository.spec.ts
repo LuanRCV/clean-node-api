@@ -1,5 +1,5 @@
 import { type Collection } from 'mongodb'
-import { MongoHelper } from '../helpers/mongo'
+import { MongoHelper } from '../helpers'
 import { LogMongoRepository } from './log-mongo-repository'
 
 let errorCollection: Collection

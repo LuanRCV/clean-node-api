@@ -1,5 +1,5 @@
 import { type Collection, ObjectId } from 'mongodb'
-import { MongoHelper } from '../helpers/mongo'
+import { MongoHelper } from '../helpers'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { mockAddAccountParams } from '@domain/test'
 

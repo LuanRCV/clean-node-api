@@ -1,5 +1,5 @@
 import { type Collection } from 'mongodb'
-import { MongoHelper } from '../helpers/mongo'
+import { MongoHelper } from '../helpers'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { type SurveyModel } from '@domain/models/survey'
 import { type AccountModel } from '@domain/models/account'
@@ -53,27 +53,36 @@ describe('Survey Result Mongo Repository', () => {
       const survey = await insertMockedSurvey()
       const account = await insertMockedAccount()
       const surveyResult = await sut.save({
-        surveyId: survey.id,
-        accountId: account.id,
+        surveyId: survey.id.toString(),
+        accountId: account.id.toString(),
         answer: survey.answers[0].text,
         date: new Date()
       })
 
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.surveyId).toEqual(survey.id)
-      expect(surveyResult.accountId).toEqual(account.id)
-      expect(surveyResult.answer).toBe(survey.answers[0].text)
-      expect(surveyResult.date).toEqual(new Date())
+      expect(surveyResult?.surveyId).toEqual(survey.id)
+      expect(surveyResult?.question).toEqual(survey.question)
+      expect(surveyResult?.answers[0]).toEqual({
+        image: 'any_image_url_1',
+        text: 'any_text_1',
+        count: 1,
+        percent: 100
+      })
+      expect(surveyResult?.answers[1]).toEqual({
+        text: 'any_text_2',
+        count: 0,
+        percent: 0
+      })
+      expect(surveyResult?.date).toEqual(new Date())
     })
 
     test('Should update a survey result if it is not new', async () => {
       const sut = buildSut()
       const survey = await insertMockedSurvey()
       const account = await insertMockedAccount()
-      const result = await surveyResultCollection.insertOne({
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyResultCollection.insertOne({
+        surveyId: MongoHelper.mapObjectId(survey.id),
+        accountId: MongoHelper.mapObjectId(account.id),
         answer: survey.answers[1].text,
         date: new Date()
       })
@@ -86,11 +95,20 @@ describe('Survey Result Mongo Repository', () => {
       })
 
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toEqual(result.ops[0]._id)
-      expect(surveyResult.surveyId).toEqual(survey.id)
-      expect(surveyResult.accountId).toEqual(account.id)
-      expect(surveyResult.answer).toBe(survey.answers[0].text)
-      expect(surveyResult.date).toEqual(new Date())
+      expect(surveyResult?.surveyId).toEqual(survey.id)
+      expect(surveyResult?.question).toEqual(survey.question)
+      expect(surveyResult?.answers[0]).toEqual({
+        image: 'any_image_url_1',
+        text: 'any_text_1',
+        count: 1,
+        percent: 100
+      })
+      expect(surveyResult?.answers[1]).toEqual({
+        text: 'any_text_2',
+        count: 0,
+        percent: 0
+      })
+      expect(surveyResult?.date).toEqual(new Date())
     })
   })
 })
