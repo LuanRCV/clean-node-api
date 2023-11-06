@@ -1,4 +1,4 @@
-import { type Collection } from 'mongodb'
+import { ObjectId, type Collection } from 'mongodb'
 import { MongoHelper } from '../helpers'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { type SurveyModel } from '@domain/models/survey'
@@ -109,6 +109,15 @@ describe('Survey Result Mongo Repository', () => {
         percent: 0
       })
       expect(surveyResult?.date).toEqual(new Date())
+    })
+  })
+
+  describe('Method loadBySurveyId', () => {
+    test('Should return null on fail', async () => {
+      const sut = buildSut()
+      const surveyResult = await sut.loadBySurveyId(new ObjectId().toString())
+
+      expect(surveyResult).toBeNull()
     })
   })
 })
