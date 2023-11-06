@@ -119,5 +119,57 @@ describe('Survey Result Mongo Repository', () => {
 
       expect(surveyResult).toBeNull()
     })
+
+    test('Should return a survey result on success', async () => {
+      const sut = buildSut()
+      const survey = await insertMockedSurvey()
+      const account = await insertMockedAccount()
+
+      await surveyResultCollection.insertMany([
+        {
+          surveyId: MongoHelper.mapObjectId(survey.id),
+          accountId: MongoHelper.mapObjectId(account.id),
+          answer: survey.answers[0].text,
+          date: new Date()
+        },
+        {
+          surveyId: MongoHelper.mapObjectId(survey.id),
+          accountId: MongoHelper.mapObjectId(account.id),
+          answer: survey.answers[0].text,
+          date: new Date()
+        },
+        {
+          surveyId: MongoHelper.mapObjectId(survey.id),
+          accountId: MongoHelper.mapObjectId(account.id),
+          answer: survey.answers[0].text,
+          date: new Date()
+        },
+        {
+          surveyId: MongoHelper.mapObjectId(survey.id),
+          accountId: MongoHelper.mapObjectId(account.id),
+          answer: survey.answers[1].text,
+          date: new Date()
+        }
+      ])
+
+      const surveyResult = await sut.loadBySurveyId(survey.id)
+
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult?.surveyId).toEqual(survey.id)
+      expect(surveyResult?.question).toEqual(survey.question)
+      console.log(surveyResult)
+      expect(surveyResult?.answers[0]).toEqual({
+        image: 'any_image_url_1',
+        text: 'any_text_1',
+        count: 3,
+        percent: 75
+      })
+      expect(surveyResult?.answers[1]).toEqual({
+        text: 'any_text_2',
+        count: 1,
+        percent: 25
+      })
+      expect(surveyResult?.date).toEqual(new Date())
+    })
   })
 })
